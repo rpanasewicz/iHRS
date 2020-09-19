@@ -1,4 +1,5 @@
-﻿using iHRS.Domain.Common;
+﻿using System;
+using iHRS.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,6 +16,8 @@ namespace iHRS.Infrastructure.EntityConfigurations
         {
             entity.ToTable(TableName);
 
+            entity.HasQueryFilter(e => e.ExpirationDate == null || e.ExpirationDate > DateTime.UtcNow);
+
             entity.Property(e => e.Id)
                 .HasColumnName(PrimaryKeyColumnName)
                 .IsRequired()
@@ -24,12 +27,14 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 .HasColumnName("CreatedBy")
                 .IsRequired()
                 .HasMaxLength(32)
+                .HasColumnType("nvarchar(32)")
                 .ValueGeneratedNever();
 
             entity.Property(e => e.ModifiedBy)
                 .HasColumnName("ModifiedBy")
                 .IsRequired()
                 .HasMaxLength(32)
+                .HasColumnType("nvarchar(32)")
                 .ValueGeneratedNever();
 
             entity.Property(e => e.CreatedOn)
@@ -44,6 +49,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
             entity.Property(e => e.ExpirationDate)
                 .HasColumnName("ExpirationDate")
+                .IsRequired(false)
                 .ValueGeneratedNever();
 
             ConfigureFields(entity);

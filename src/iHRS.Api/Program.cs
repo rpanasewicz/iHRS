@@ -50,6 +50,7 @@ namespace iHRS.Api
                             });
                     });
 
+          
                     services.AddTransient<ErrorHandlerMiddleware>();
 
                 })
@@ -57,7 +58,7 @@ namespace iHRS.Api
                 {
                     app.UseMiddleware<ErrorHandlerMiddleware>();
                     app.UseRouting();
-
+                    app.UseAuthorization();
                     app.UseCors("allow-all");
                     app.UseEndpoints(endpoints =>
                     {

@@ -12,7 +12,7 @@ namespace iHRS.Domain.Common
         public string ModifiedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         private readonly List<IDomainEvent> _events = new List<IDomainEvent>();
         public IEnumerable<IDomainEvent> Events => _events;

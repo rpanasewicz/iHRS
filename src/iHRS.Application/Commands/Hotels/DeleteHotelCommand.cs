@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using iHRS.Application.Common;
+using iHRS.Application.Exceptions;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 
@@ -29,6 +29,9 @@ namespace iHRS.Application.Commands.Hotels
         public async Task Handle(DeleteHotelCommand cmd)
         {
             var hotel = await _hotelRepository.GetAsync(cmd.HotelId);
+
+            if(hotel is null)
+                throw new NotFoundException(nameof(Hotel), cmd.HotelId);
 
             await  _hotelRepository.DeleteAsync(hotel);
         }

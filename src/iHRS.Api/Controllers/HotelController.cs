@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using iHRS.Api.Configuration;
 using iHRS.Application.Commands;
 using iHRS.Application.Commands.Hotels;
 using iHRS.Application.Common;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace iHRS.Api.Controllers
 {
+    [JwtAuth]
     [ApiController]
     [Route("hotels")]
     public class HotelController : Controller

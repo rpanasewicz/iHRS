@@ -9,8 +9,10 @@ using System;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using iHRS.Application.Auth;
 using iHRS.Application.Common;
 using iHRS.Domain.DomainEvents.Abstractions;
+using iHRS.Infrastructure.Auth;
 using iHRS.Infrastructure.Dispatchers;
 using Microsoft.Extensions.Configuration;
 
@@ -50,6 +52,9 @@ namespace iHRS.Infrastructure
 
             services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
             services.AddSingleton<IDomainEventPublisher, DomainEventDispatcher>();
+
+            services.AddJwt();
+            services.AddScoped<IAuthProvider, AuthProvider>();
 
             services.AddDbContext<HRSContext>(options =>
             {
