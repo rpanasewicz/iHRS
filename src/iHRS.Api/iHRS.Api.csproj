@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -7,10 +7,12 @@
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.10.1-dev-01249" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.1-dev-00180" />
+    <PackageReference Include="Polly" Version="7.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\iHRS.Application\iHRS.Application.csproj" />
+    <ProjectReference Include="..\iHRS.Infrastructure\iHRS.Infrastructure.csproj" />
   </ItemGroup>
 
 

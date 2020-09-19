@@ -1,0 +1,11 @@
+@url = http://localhost:5000/hotels
+@accessToken = secret
+
+
+###
+POST {{url}}
+Content-Type: application/json
+
+{
+  "name" : "My first hotel !"
+}
