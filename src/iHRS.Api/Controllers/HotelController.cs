@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using iHRS.Api.Configuration;
-using iHRS.Application.Commands;
+﻿using iHRS.Api.Configuration;
 using iHRS.Application.Commands.Hotels;
 using iHRS.Application.Common;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace iHRS.Api.Controllers
 {
@@ -25,8 +22,8 @@ namespace iHRS.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(CreateHotelCommand command)
         {
-            await _commandDispatcher.SendAsync((command));
-            return Ok();
+            var hotelId = await _commandDispatcher.SendAsync((command));
+            return Created($"hotels/{hotelId}", new { hotelId });
         }
 
         [HttpDelete("{hotelId}")]

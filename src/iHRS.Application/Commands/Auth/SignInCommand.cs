@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using iHRS.Application.Auth;
+﻿using iHRS.Application.Auth;
 using iHRS.Application.Common;
 using iHRS.Application.Exceptions;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace iHRS.Application.Commands.Auth
 {

@@ -1,16 +1,14 @@
-using System;
 using iHRS.Api.Exceptions;
+using iHRS.Application;
 using iHRS.Infrastructure;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Serilog;
-using System.Threading.Tasks;
-using iHRS.Application;
-using iHRS.Application.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Serilog.Events;
+using System.Threading.Tasks;
 
 namespace iHRS.Api
 {
@@ -50,7 +48,7 @@ namespace iHRS.Api
                             });
                     });
 
-          
+
                     services.AddTransient<ErrorHandlerMiddleware>();
 
                 })

@@ -1,0 +1,27 @@
+@url = http://localhost:5000/auth
+@accessToken = secret
+
+###
+POST {{url}}/sign-up
+Content-Type: application/json
+
+{
+  "firstName": "Adam",
+  "lastName": "Nowak",
+  "dateOfBirth": "1980-03-03",
+  "email": "user@example.com",
+  "password": "secret"
+}
+
+###
+POST {{url}}/sign-in
+Content-Type: application/json
+
+{
+  "emailAddress": "user@example.com",
+  "password": "secret"
+}
+
+###
+GET {{url}}/me
+Authorization: Bearer {{accessToken}}

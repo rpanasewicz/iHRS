@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using iHRS.Application.Common;
+﻿using iHRS.Application.Common;
 using iHRS.Application.Exceptions;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace iHRS.Application.Commands.Hotels
 {
@@ -26,14 +26,16 @@ namespace iHRS.Application.Commands.Hotels
             _hotelRepository = hotelRepository;
         }
 
-        public async Task Handle(DeleteHotelCommand cmd)
+        public async Task<Unit> Handle(DeleteHotelCommand cmd)
         {
             var hotel = await _hotelRepository.GetAsync(cmd.HotelId);
 
-            if(hotel is null)
+            if (hotel is null)
                 throw new NotFoundException(nameof(Hotel), cmd.HotelId);
 
-            await  _hotelRepository.DeleteAsync(hotel);
+            await _hotelRepository.DeleteAsync(hotel);
+
+            return Unit.Value;
         }
     }
 }

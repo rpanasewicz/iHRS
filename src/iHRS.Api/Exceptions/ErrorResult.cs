@@ -1,4 +1,5 @@
 using iHRS.Application.Exceptions;
+using iHRS.Domain.Exceptions;
 using System;
 using System.Net;
 
@@ -21,7 +22,8 @@ namespace iHRS.Api.Exceptions
         {
             return ex switch
             {
-                AppException stsException => new ErrorResult(stsException.Message, stsException.Code, stsException.StatusCode),
+                AppException appException => new ErrorResult(appException.Message, appException.Code, appException.StatusCode),
+                DomainException domainException => new ErrorResult(domainException.Message, domainException.Code, domainException.StatusCode),
                 _ => new ErrorResult(ex.Message, "no_code", HttpStatusCode.InternalServerError)
             };
         }

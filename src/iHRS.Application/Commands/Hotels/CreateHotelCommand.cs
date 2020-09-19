@@ -1,17 +1,22 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using iHRS.Application.Common;
+﻿using iHRS.Application.Common;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace iHRS.Application.Commands.Hotels
 {
-    public class CreateHotelCommand : ICommand
+    public class CreateHotelCommand : ICommand<Guid>
     {
-        public string Name { get; set; }
+        public string Name { get; }
+
+        public CreateHotelCommand(string name)
+        {
+            Name = name;
+        }
     }
 
-    public class CreateHotelCommandHandler : ICommandHandler<CreateHotelCommand>
+    public class CreateHotelCommandHandler : ICommandHandler<CreateHotelCommand, Guid>
     {
         private readonly IRepository<Hotel> _hotelRepository;
 
@@ -20,10 +25,11 @@ namespace iHRS.Application.Commands.Hotels
             _hotelRepository = hotelRepository;
         }
 
-        public async Task Handle(CreateHotelCommand cmd)
+        public async Task<Guid> Handle(CreateHotelCommand cmd)
         {
             var hotel = Hotel.CreateNew(cmd.Name);
             await _hotelRepository.AddAsync(hotel);
-;        }
+            return hotel.Id;
+        }
     }
 }

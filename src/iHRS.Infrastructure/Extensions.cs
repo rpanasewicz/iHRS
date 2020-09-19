@@ -1,23 +1,51 @@
-﻿using iHRS.Domain.Common;
+﻿using iHRS.Application.Auth;
+using iHRS.Application.Common;
+using iHRS.Domain.Common;
+using iHRS.Domain.DomainEvents.Abstractions;
+using iHRS.Infrastructure.Auth;
+using iHRS.Infrastructure.Decorators;
+using iHRS.Infrastructure.Dispatchers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
+using Scrutor;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using AutoMapper;
-using iHRS.Application.Auth;
-using iHRS.Application.Common;
-using iHRS.Domain.DomainEvents.Abstractions;
-using iHRS.Infrastructure.Auth;
-using iHRS.Infrastructure.Dispatchers;
-using Microsoft.Extensions.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace iHRS.Infrastructure
 {
+    public static class GenericTypeExtensions
+    {
+        public static string GetGenericTypeName(this Type type)
+        {
+            string typeName;
+
+            if (type.IsGenericType)
+            {
+                var genericTypes = string.Join(",", type.GetGenericArguments().Select(t => t.Name).ToArray());
+                typeName = $"{type.Name.Remove(type.Name.IndexOf('`'))}<{genericTypes}>";
+            }
+            else
+            {
+                typeName = type.Name;
+            }
+
+            return typeName;
+        }
+
+        public static string GetGenericTypeName(this object @object)
+        {
+            return @object.GetType().GetGenericTypeName();
+        }
+    }
+
     public static class Extensions
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
@@ -27,19 +55,10 @@ namespace iHRS.Infrastructure
             services
                 .Scan(scan =>
                     scan
-                        .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-                        .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
-                        .AsImplementedInterfaces()
-                        .WithTransientLifetime());
-
-            services
-                .Scan(scan =>
-                    scan
-                        .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+                        .FromAssemblies(typeof(ICommandHandler<,>).Assembly)
                         .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<,>)))
                         .AsImplementedInterfaces()
                         .WithTransientLifetime());
-
 
             services
                 .Scan(scan =>
@@ -65,6 +84,9 @@ namespace iHRS.Infrastructure
                         sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
                     });
             });
+
+            services.AddCommandDecorator(typeof(ICommandHandler<,>), typeof(CommandHandlerTransactionDecorator<,>));
+            services.AddCommandDecorator(typeof(ICommandHandler<,>), typeof(CommandHandlerLoggingDecorator<,>));
 
             return services;
         }
@@ -127,5 +149,40 @@ namespace iHRS.Infrastructure
             return webHost;
         }
 
+        private static IServiceCollection AddCommandDecorator(this IServiceCollection services, Type handlerType, Type decoratorType)
+        {
+            var handlers = handlerType.Assembly
+                .GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType))
+                .ToList();
+
+            handlers.ForEach(ch =>
+            {
+                GetExtensionMethods()
+                    .FirstOrDefault(mi => !mi.IsGenericMethod && mi.Name == "TryDecorate")?
+                    .Invoke(services, new object[]
+                    {
+                            services,
+                            ch.GetInterfaces().FirstOrDefault(il => il.GenericTypeArguments.Length == 2),
+                            decoratorType.MakeGenericType(ch.GetInterfaces().FirstOrDefault(il => il.GenericTypeArguments.Length == 2)?.GenericTypeArguments ?? new Type[] { })
+                    });
+            });
+
+            return services;
+        }
+
+        private static IEnumerable<MethodInfo> GetExtensionMethods()
+        {
+            var types = typeof(ReplacementBehavior).Assembly.GetTypes();
+
+            var query = from type in types
+                        where type.IsSealed && !type.IsGenericType && !type.IsNested
+                        from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                        where method.IsDefined(typeof(ExtensionAttribute), false)
+                        where method.GetParameters()[0].ParameterType == typeof(IServiceCollection)
+                        select method;
+            return query;
+        }
     }
+
 }

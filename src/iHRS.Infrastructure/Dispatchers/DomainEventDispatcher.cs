@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using iHRS.Domain.DomainEvents.Abstractions;
+﻿using iHRS.Domain.DomainEvents.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace iHRS.Infrastructure.Dispatchers
 {

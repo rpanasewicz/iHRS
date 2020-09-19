@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using iHRS.Domain.Common;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using iHRS.Domain.Common;
-using Microsoft.EntityFrameworkCore;
 
-namespace iHRS.Infrastructure.Dispatchers
+namespace iHRS.Infrastructure
 {
     internal sealed class EfCoreRepository<T> : IRepository<T> where T : Entity
     {
@@ -19,13 +18,12 @@ namespace iHRS.Infrastructure.Dispatchers
         public async Task AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T entity)
+        public Task DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
         public async Task<bool> ExistsAsync(Guid id)

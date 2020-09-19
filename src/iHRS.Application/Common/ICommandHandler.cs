@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace iHRS.Application.Common
 {
@@ -8,8 +7,8 @@ namespace iHRS.Application.Common
         Task<TResult> Handle(TCommand cmd);
     }
 
-    public interface ICommandHandler<in TCommand> where TCommand : class, ICommand
+    public interface ICommandHandler<in TCommand> : ICommandHandler<TCommand, Unit> where TCommand : class, ICommand<Unit>
     {
-        Task Handle(TCommand cmd);
+
     }
 }

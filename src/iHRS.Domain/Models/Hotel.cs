@@ -1,4 +1,5 @@
 ﻿using iHRS.Domain.Common;
+using iHRS.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,19 @@ namespace iHRS.Domain.Models
         public static Hotel CreateNew(string name)
         {
             return new Hotel(Guid.NewGuid(), name);
+        }
+
+        public Room AddRoom(string roomNumber)
+        {
+            if (_rooms is null) throw new PropertyNotInitializedException(nameof(Rooms));
+
+            if (_rooms.Any(e => e.RoomNumber == roomNumber))
+                throw new RoomAlreadyExist(roomNumber);
+
+            var room = Room.CreateNew(roomNumber, this);
+            _rooms.Add(room);
+
+            return room;
         }
     }
 }

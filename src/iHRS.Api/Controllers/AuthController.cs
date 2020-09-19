@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using iHRS.Application.Commands.Auth;
+﻿using iHRS.Application.Commands.Auth;
 using iHRS.Application.Common;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace iHRS.Api.Controllers
 {

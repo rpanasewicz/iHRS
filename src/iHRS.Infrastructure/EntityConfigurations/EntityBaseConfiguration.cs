@@ -1,11 +1,11 @@
-﻿using System;
-using iHRS.Domain.Common;
+﻿using iHRS.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    internal abstract  class EntityBaseConfiguration<T> : IEntityTypeConfiguration<T> where T : Entity
+    internal abstract class EntityBaseConfiguration<T> : IEntityTypeConfiguration<T> where T : Entity
     {
         public abstract void ConfigureFields(EntityTypeBuilder<T> entity);
         public abstract void ConfigureRelationships(EntityTypeBuilder<T> entity);
@@ -40,8 +40,8 @@ namespace iHRS.Infrastructure.EntityConfigurations
             entity.Property(e => e.CreatedOn)
                 .HasColumnName("CreatedOn")
                 .IsRequired()
-                .ValueGeneratedNever(); 
-            
+                .ValueGeneratedNever();
+
             entity.Property(e => e.ModifiedOn)
                 .HasColumnName("ModifiedOn")
                 .IsRequired()

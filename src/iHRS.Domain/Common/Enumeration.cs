@@ -33,9 +33,7 @@ namespace iHRS.Domain.Common
 
         public override bool Equals(object obj)
         {
-            var otherValue = obj as Enumeration<TKey>;
-
-            if (otherValue == null)
+            if (!(obj is Enumeration<TKey> otherValue))
                 return false;
 
             var typeMatches = GetType() == obj.GetType();

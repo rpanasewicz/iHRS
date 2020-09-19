@@ -1,24 +1,33 @@
 ﻿using iHRS.Domain.Common;
 using iHRS.Domain.DomainEvents.Abstractions;
+using iHRS.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using iHRS.Domain.Models;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace iHRS.Infrastructure
 {
-    public class HRSContext : DbContext
+    internal class HRSContext : DbContext
     {
         public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IDomainEventPublisher _domainEventPublisher;
+
+        private IDbContextTransaction _currentTransaction;
+        public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
+
+        public bool HasActiveTransaction => _currentTransaction != null;
 
         public HRSContext(DbContextOptions<HRSContext> options, IHttpContextAccessor httpContextAccessor, IDomainEventPublisher domainEventPublisher) : base(options)
         {
@@ -87,6 +96,56 @@ namespace iHRS.Infrastructure
             foreach (var domainEvent in domainEvents)
                 await _domainEventPublisher.PublishAsync(domainEvent);
         }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            if (_currentTransaction != null) return null;
+
+            _currentTransaction = await Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+
+            return _currentTransaction;
+        }
+
+        public async Task CommitTransactionAsync(IDbContextTransaction transaction)
+        {
+            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+            if (transaction != _currentTransaction) throw new InvalidOperationException($"Transaction {transaction.TransactionId} is not current");
+
+            try
+            {
+                await SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                RollbackTransaction();
+                throw;
+            }
+            finally
+            {
+                if (_currentTransaction != null)
+                {
+                    _currentTransaction.Dispose();
+                    _currentTransaction = null;
+                }
+            }
+        }
+
+        public void RollbackTransaction()
+        {
+            try
+            {
+                _currentTransaction?.Rollback();
+            }
+            finally
+            {
+                if (_currentTransaction != null)
+                {
+                    _currentTransaction.Dispose();
+                    _currentTransaction = null;
+                }
+            }
+        }
     }
 
     internal class HRSContextFactory : IDesignTimeDbContextFactory<HRSContext>
@@ -111,7 +170,7 @@ namespace iHRS.Infrastructure
 
         private class NoEventPublisher : IDomainEventPublisher
         {
-            public Task PublishAsync<T>(T @event) where T : class, IDomainEvent 
+            public Task PublishAsync<T>(T @event) where T : class, IDomainEvent
                 => Task.CompletedTask;
 
         }

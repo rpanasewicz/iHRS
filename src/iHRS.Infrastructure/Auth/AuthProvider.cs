@@ -1,17 +1,15 @@
-﻿using System;
-using iHRS.Application.Auth;
+﻿using iHRS.Application.Auth;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace iHRS.Infrastructure.Auth
 {
     internal sealed class AuthProvider : IAuthProvider
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HttpContext _httpContext;
 
         public AuthProvider(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
             _httpContext = httpContextAccessor.HttpContext;
         }
 

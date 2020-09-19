@@ -17,4 +17,3 @@ namespace iHRS.Infrastructure.EntityConfigurations
         public override string PrimaryKeyColumnName => "UserId";
     }
 }
-    
