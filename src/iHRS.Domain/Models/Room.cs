@@ -44,7 +44,7 @@ namespace iHRS.Domain.Models
         {
             if(_reservations is null) throw new PropertyNotInitializedException(nameof(Reservations));
 
-            if (_reservations.Any(r => r.StartDate <= toDate && r.EndDate >= fromDate))
+            if (_reservations.Any(r => r.StartDate < toDate && r.EndDate > fromDate))
                 throw new RoomAlreadyReserved();;
 
             var reservation = Reservation.CreateNew(fromDate, toDate, numberOfPersons, customer, this);
