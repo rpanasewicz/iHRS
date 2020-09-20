@@ -32,5 +32,12 @@ namespace iHRS.Api.Controllers
             await _commandDispatcher.SendAsync(new DeleteHotelCommand(hotelId));
             return Ok();
         }
+
+        [HttpPost("{hotelId}/messageTemplates")]
+        public async Task<IActionResult> CreateMessageTemplate(CreateMessageTemplateCommand cmd)
+        {
+            var templateId = await _commandDispatcher.SendAsync(cmd);
+            return Created($"hotels/{cmd.HotelId}/messageTemplates/{templateId}", new { cmd.HotelId, templateId });
+        }
     }
 }

@@ -8,6 +8,18 @@ namespace iHRS.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CommunicationMethods",
+                columns: table => new
+                {
+                    CommunicationMethodId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommunicationMethods", x => x.CommunicationMethodId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
@@ -38,6 +50,18 @@ namespace iHRS.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Hotels", x => x.HotelId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageTypes",
+                columns: table => new
+                {
+                    MessageTypeId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageTypes", x => x.MessageTypeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,6 +122,44 @@ namespace iHRS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MessageTemplates",
+                columns: table => new
+                {
+                    MessageTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MessageTypeId = table.Column<int>(type: "int", nullable: false),
+                    CommunicationMethodId = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageTemplates", x => x.MessageTemplateId);
+                    table.ForeignKey(
+                        name: "FK_MessageTemplates_CommunicationMethods_CommunicationMethodId",
+                        column: x => x.CommunicationMethodId,
+                        principalTable: "CommunicationMethods",
+                        principalColumn: "CommunicationMethodId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MessageTemplates_Hotels_HotelId",
+                        column: x => x.HotelId,
+                        principalTable: "Hotels",
+                        principalColumn: "HotelId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MessageTemplates_MessageTypes_MessageTypeId",
+                        column: x => x.MessageTypeId,
+                        principalTable: "MessageTypes",
+                        principalColumn: "MessageTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reservations",
                 columns: table => new
                 {
@@ -138,6 +200,21 @@ namespace iHRS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_MessageTemplates_CommunicationMethodId",
+                table: "MessageTemplates",
+                column: "CommunicationMethodId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageTemplates_HotelId",
+                table: "MessageTemplates",
+                column: "HotelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageTemplates_MessageTypeId",
+                table: "MessageTemplates",
+                column: "MessageTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CustomerId",
                 table: "Reservations",
                 column: "CustomerId");
@@ -161,10 +238,19 @@ namespace iHRS.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "MessageTemplates");
+
+            migrationBuilder.DropTable(
                 name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "CommunicationMethods");
+
+            migrationBuilder.DropTable(
+                name: "MessageTypes");
 
             migrationBuilder.DropTable(
                 name: "Customers");

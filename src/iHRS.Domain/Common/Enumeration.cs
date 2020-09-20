@@ -62,6 +62,16 @@ namespace iHRS.Domain.Common
         }
 
         public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
+
+        public static bool operator ==(Enumeration a, Enumeration b)
+        {
+            return a?.Equals(b) ?? b is null;
+        }
+
+        public static bool operator !=(Enumeration a, Enumeration b)
+        {
+            return !(a == b);
+        }
     }
 
 }

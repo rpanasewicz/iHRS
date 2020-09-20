@@ -21,6 +21,9 @@ namespace iHRS.Infrastructure
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<ReservationStatus> ReservationStatuses { get; set; }
+        public DbSet<MessageTemplate> MessageTemplate { get; set; }
+        public DbSet<MessageType> MessageTemplateType { get; set; }
+        public DbSet<CommunicationMethod> CommunicationMethods { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IDomainEventPublisher _domainEventPublisher;

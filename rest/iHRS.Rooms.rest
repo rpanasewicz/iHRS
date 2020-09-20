@@ -1,7 +1,7 @@
 @url = http://localhost:5000/hotels/{{hotelId}}/rooms
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYjdkYWZkNS04OTE0LTRlNWYtOThkNS1kZmFmYmQ0ZTI5MmQiLCJ1bmlxdWVfbmFtZSI6ImZiN2RhZmQ1LTg5MTQtNGU1Zi05OGQ1LWRmYWZiZDRlMjkyZCIsImp0aSI6IjJiYmZlY2U0LTk4YjMtNDZkOC04Yzk1LWNjMTk4MTA4MWExNSIsImlhdCI6IjE2MDA1MTkxNjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwibmJmIjoxNjAwNTE5MTY1LCJleHAiOjE2MDA2MDkxNjUsImlzcyI6ImlIUlMifQ.GDBK8eaWuCL5h9YfcG6GZoCEOx_wiuExxOJq1wJjwj8
-@hotelId = 130365a2-3b29-4f18-9663-1b9c7d5eb40d
-@roomId = 0236456b-63f2-4b1a-a1f7-32ec45d2639e
+@hotelId = f1e349dc-04fa-458e-bf17-0599d4e4fa69
+@roomId = 9bfc0f47-82de-447f-b37d-301147357179
 
 
 ###
@@ -10,7 +10,7 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {  
-    "roomNumber" : "My first room 123!"
+    "roomNumber" : "My first room 1233!"
 }
 
 ###
@@ -19,8 +19,8 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {  
-    "startDate" : "2020-12-15",
-    "endDate" : "2020-12-17",
+    "startDate" : "2020-12-25",
+    "endDate" : "2020-12-26",
     "numberOfPersons" : 2,
     "customerFirstName" : "Harry",
     "customerLastName" : "Potter",

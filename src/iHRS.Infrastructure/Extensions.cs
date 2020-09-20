@@ -15,10 +15,12 @@ using Polly;
 using Scrutor;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using iHRS.Domain.Models;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace iHRS.Infrastructure
 {
@@ -96,15 +98,45 @@ namespace iHRS.Infrastructure
         {
             return MigrateDbContext<HRSContext>(webHost, (context, provider) =>
             {
-                context.SeedEnumeration<ReservationStatus>();
+                context.SeedEnumerations();
                 context.SaveChanges();
             });
         }
 
-        private static void SeedEnumeration<T>(this HRSContext context) where T : Enumeration
+        private static void SeedEnumerations(this HRSContext context, Assembly assembly = null)
         {
-            if (context.Set<T>().Any()) return;
-            context.Set<T>().AddRange(Enumeration.GetAll<T>());
+            assembly ??= typeof(Enumeration).Assembly;
+
+            assembly
+                .GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(Enumeration)) && t.IsClass && !t.IsAbstract)
+                .ToList()
+                .ForEach(t =>
+                {
+                    var enumValues = typeof(Enumeration)
+                        .GetMethod("GetAll")?
+                        .MakeGenericMethod(t)
+                        .Invoke(null, null);
+
+                    var set = context
+                        .GetType()
+                        .GetMethods()
+                        .FirstOrDefault(m => m.Name == "Set" && m.GetParameters().Length == 0)?
+                        .MakeGenericMethod(t)
+                        .Invoke(context, null) as IListSource;
+
+                    var findResult = set?
+                        .GetType()?
+                        .GetMethod("Find")?
+                        .Invoke(set, new object[] { new object[] { 1 } });
+
+                    if (findResult is null)
+                        set?
+                        .GetType()
+                        .GetMethods()
+                        .FirstOrDefault(m => m.Name == "AddRange" && m.GetParameters().First().ParameterType.Name.StartsWith("IEnumerable"))?
+                        .Invoke(set, new[] { enumValues });
+                });
         }
 
         internal static IWebHost MigrateDbContext<TContext>(this IWebHost webHost, Action<TContext, IServiceProvider> seeder) where TContext : DbContext

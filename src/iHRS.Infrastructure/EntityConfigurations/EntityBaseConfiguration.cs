@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Linq;
+using System.Threading.Channels;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
@@ -53,6 +54,13 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 .IsRequired(false)
                 .ValueGeneratedNever();
 
+            typeof(T)
+                .GetProperties()
+                .Where(p => p.PropertyType.IsSubclassOf(typeof(Enumeration)) && p.PropertyType.IsClass && !p.PropertyType.IsAbstract)
+                .Select(p => p.Name)
+                .ToList()
+                .ForEach(p => entity.Ignore(p));
+
             ConfigureFields(entity);
             ConfigureRelationships(entity);
         }
@@ -78,13 +86,6 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 .HasColumnType("nvarchar(128)")
                 .IsRequired()
                 .ValueGeneratedNever();
-
-            typeof(T)
-                .GetProperties()
-                .Where(p => p.PropertyType.IsAssignableFrom(typeof(Enumeration)))
-                .Select(p => p.Name)
-                .ToList()
-                .ForEach(p => entity.Ignore(p));
         }
     }
 }

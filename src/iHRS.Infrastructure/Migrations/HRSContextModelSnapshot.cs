@@ -19,6 +19,22 @@ namespace iHRS.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0-rc.1.20451.13");
 
+            modelBuilder.Entity("iHRS.Domain.Models.CommunicationMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnName("CommunicationMethodId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CommunicationMethods");
+                });
+
             modelBuilder.Entity("iHRS.Domain.Models.Customer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -90,6 +106,75 @@ namespace iHRS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Hotels");
+                });
+
+            modelBuilder.Entity("iHRS.Domain.Models.MessageTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("MessageTemplateId");
+
+                    b.Property<int>("CommunicationMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)")
+                        .HasColumnName("CreatedBy");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedOn");
+
+                    b.Property<DateTime?>("ExpirationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ExpirationDate");
+
+                    b.Property<Guid>("HotelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MessageTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)")
+                        .HasColumnName("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ModifiedOn");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommunicationMethodId");
+
+                    b.HasIndex("HotelId");
+
+                    b.HasIndex("MessageTypeId");
+
+                    b.ToTable("MessageTemplates");
+                });
+
+            modelBuilder.Entity("iHRS.Domain.Models.MessageType", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnName("MessageTypeId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MessageTypes");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Reservation", b =>
@@ -260,6 +345,33 @@ namespace iHRS.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("iHRS.Domain.Models.MessageTemplate", b =>
+                {
+                    b.HasOne("iHRS.Domain.Models.CommunicationMethod", "CommunicationMethod")
+                        .WithMany()
+                        .HasForeignKey("CommunicationMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("iHRS.Domain.Models.Hotel", "Hotel")
+                        .WithMany("MessageTemplates")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("iHRS.Domain.Models.MessageType", "MessageType")
+                        .WithMany()
+                        .HasForeignKey("MessageTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CommunicationMethod");
+
+                    b.Navigation("Hotel");
+
+                    b.Navigation("MessageType");
+                });
+
             modelBuilder.Entity("iHRS.Domain.Models.Reservation", b =>
                 {
                     b.HasOne("iHRS.Domain.Models.Customer", "Customer")
@@ -305,6 +417,8 @@ namespace iHRS.Infrastructure.Migrations
 
             modelBuilder.Entity("iHRS.Domain.Models.Hotel", b =>
                 {
+                    b.Navigation("MessageTemplates");
+
                     b.Navigation("Rooms");
                 });
 

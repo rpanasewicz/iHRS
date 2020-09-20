@@ -16,7 +16,7 @@ namespace iHRS.Infrastructure.Dispatchers
         public async Task PublishAsync<T>(T @event) where T : class, IDomainEvent
         {
             using var scope = _serviceFactory.CreateScope();
-            var handlers = scope.ServiceProvider.GetServices<IEventHandler<T>>();
+            var handlers = scope.ServiceProvider.GetServices<IDomainEventHandler<T>>();
             foreach (var handler in handlers)
             {
                 await handler.HandleAsync(@event);

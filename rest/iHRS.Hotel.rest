@@ -1,6 +1,6 @@
 @url = http://localhost:5000/hotels
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYjdkYWZkNS04OTE0LTRlNWYtOThkNS1kZmFmYmQ0ZTI5MmQiLCJ1bmlxdWVfbmFtZSI6ImZiN2RhZmQ1LTg5MTQtNGU1Zi05OGQ1LWRmYWZiZDRlMjkyZCIsImp0aSI6IjJiYmZlY2U0LTk4YjMtNDZkOC04Yzk1LWNjMTk4MTA4MWExNSIsImlhdCI6IjE2MDA1MTkxNjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwibmJmIjoxNjAwNTE5MTY1LCJleHAiOjE2MDA2MDkxNjUsImlzcyI6ImlIUlMifQ.GDBK8eaWuCL5h9YfcG6GZoCEOx_wiuExxOJq1wJjwj8
-@hotelId = 1628b3ac-6ec1-441c-812b-9972d52842a7
+@hotelId = 59d5f9b8-1521-4674-84ad-552420682501
 
 
 ###
@@ -16,3 +16,14 @@ Authorization: Bearer {{accessToken}}
 DELETE  {{url}}/{{hotelId}}
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
+
+###
+POST {{url}}/{{hotelId}}/messageTemplates
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "message" : "My first hotel !",
+  "messageType": 1,
+  "communicationMethod": 1
+}

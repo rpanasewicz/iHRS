@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using iHRS.Domain.DomainEvents;
 using iHRS.Domain.Exceptions;
 
 namespace iHRS.Domain.Models
@@ -50,6 +51,8 @@ namespace iHRS.Domain.Models
             var reservation = Reservation.CreateNew(fromDate, toDate, numberOfPersons, customer, this);
 
             _reservations.Add(reservation);
+
+            AddEvent(new ReservationCreatedDomainEvent(reservation, this));
 
             return reservation;
         }

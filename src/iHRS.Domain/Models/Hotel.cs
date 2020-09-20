@@ -15,12 +15,18 @@ namespace iHRS.Domain.Models
             get => _rooms.AsEnumerable();
             private set => _rooms = new HashSet<Room>(value);
         }
+        public IEnumerable<MessageTemplate> MessageTemplates
+        {
+            get => _messageTemplates.AsEnumerable();
+            private set => _messageTemplates = new HashSet<MessageTemplate>(value);
+        }
 
         private ISet<Room> _rooms;
+        private ISet<MessageTemplate> _messageTemplates;
 
         private Hotel() { } // For EF
 
-        private Hotel(Guid id, string name, IEnumerable<Room> rooms = null)
+        private Hotel(Guid id, string name, IEnumerable<Room> rooms = null, IEnumerable<MessageTemplate> messageTemplates = null)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
@@ -28,6 +34,7 @@ namespace iHRS.Domain.Models
             Id = id;
             Name = name;
             Rooms = rooms ?? Enumerable.Empty<Room>();
+            MessageTemplates = messageTemplates ?? Enumerable.Empty<MessageTemplate>();
         }
 
         public static Hotel CreateNew(string name)
@@ -46,6 +53,19 @@ namespace iHRS.Domain.Models
             _rooms.Add(room);
 
             return room;
+        }
+
+        public MessageTemplate AddMessageTemplate(string body, MessageType type,
+            CommunicationMethod communicationMethod)
+        {
+            if(_messageTemplates is null) throw new PropertyNotInitializedException(nameof(MessageTemplates));
+
+            if(MessageTemplates.Any(m => m.MessageType == type && m.CommunicationMethod == communicationMethod))
+                throw new MessageTemplateAlreadyExist();
+
+            var template = MessageTemplate.CreateNew(body, this, type, communicationMethod);
+            _messageTemplates.Add(template);
+            return template;
         }
     }
 }
