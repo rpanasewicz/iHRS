@@ -4,6 +4,8 @@ using iHRS.Application.Common;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using iHRS.Domain.Models;
+using Microsoft.Extensions.Logging;
 
 namespace iHRS.Api.Controllers
 {
@@ -13,23 +15,21 @@ namespace iHRS.Api.Controllers
     public class RoomController : Controller
     {
         private readonly ICommandDispatcher _commandDispatcher;
+        private readonly ILogger<RoomController> _logger;
 
-        public RoomController(ICommandDispatcher commandDispatcher)
+        public RoomController(ICommandDispatcher commandDispatcher, ILogger<RoomController> logger)
         {
             _commandDispatcher = commandDispatcher;
+            _logger = logger;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Guid hotelId, CreateRoomModel md)
+        public async Task<IActionResult> Post(CreateRoomCommand cmd)
         {
-            var roomId = await _commandDispatcher.SendAsync((new CreateRoomCommand(hotelId, md.RoomNumber)));
-            return Created($"hotels/{hotelId}/rooms/{roomId}", new { hotelId, roomId });
+            var roomId = await _commandDispatcher.SendAsync(cmd);
+            return Created($"hotels/{cmd.HotelId}/rooms/{roomId}", new { cmd.HotelId, roomId });
 
         }
-    }
 
-    public class CreateRoomModel
-    {
-        public string RoomNumber { get; set; }
     }
 }

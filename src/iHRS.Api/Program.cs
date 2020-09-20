@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using System.Threading.Tasks;
+using iHRS.Api.Binders;
 
 namespace iHRS.Api
 {
@@ -34,7 +35,7 @@ namespace iHRS.Api
                     services.AddApplication();
                     services.AddInfrastructure(configuration);
 
-                    services.AddControllers();
+                    services.AddControllers(opts => opts.ModelBinderProviders.InsertBodyAndRouteBinding());
 
                     services.AddCors(options =>
                     {
@@ -48,6 +49,8 @@ namespace iHRS.Api
                             });
                     });
 
+                    services.AddMvc();
+   
 
                     services.AddTransient<ErrorHandlerMiddleware>();
 
