@@ -10,7 +10,7 @@ using iHRS.Infrastructure;
 namespace iHRS.Infrastructure.Migrations
 {
     [DbContext(typeof(HRSContext))]
-    [Migration("20200920101607_Mig1")]
+    [Migration("20200920103604_Mig1")]
     partial class Mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -130,19 +130,43 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("ModifiedOn");
 
-                    b.Property<Guid?>("RoomId1")
+                    b.Property<int>("NumberOfPersons")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2(7)");
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("RoomId1");
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("iHRS.Domain.Models.ReservationStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnName("ReservationStatusId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReservationStatuses");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Room", b =>
@@ -240,15 +264,29 @@ namespace iHRS.Infrastructure.Migrations
 
             modelBuilder.Entity("iHRS.Domain.Models.Reservation", b =>
                 {
-                    b.HasOne("iHRS.Domain.Models.Customer", null)
+                    b.HasOne("iHRS.Domain.Models.Customer", "Customer")
                         .WithMany("Reservations")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("iHRS.Domain.Models.Room", null)
+                    b.HasOne("iHRS.Domain.Models.Room", "Room")
                         .WithMany("Reservations")
-                        .HasForeignKey("RoomId1");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("iHRS.Domain.Models.ReservationStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Room", b =>

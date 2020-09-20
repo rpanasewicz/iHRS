@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using iHRS.Domain.Models;
 
 namespace iHRS.Infrastructure
 {
@@ -95,20 +96,15 @@ namespace iHRS.Infrastructure
         {
             return MigrateDbContext<HRSContext>(webHost, (context, provider) =>
             {
-
+                context.SeedEnumeration<ReservationStatus>();
                 context.SaveChanges();
             });
         }
 
         private static void SeedEnumeration<T>(this HRSContext context) where T : Enumeration
         {
-            context.SeedEnumeration<T, int>();
-        }
-
-        private static void SeedEnumeration<T, TKey>(this HRSContext context) where T : Enumeration<TKey> where TKey : IComparable, IEquatable<TKey>
-        {
             if (context.Set<T>().Any()) return;
-            context.Set<T>().AddRange(Enumeration<TKey>.GetAll<T>());
+            context.Set<T>().AddRange(Enumeration.GetAll<T>());
         }
 
         internal static IWebHost MigrateDbContext<TContext>(this IWebHost webHost, Action<TContext, IServiceProvider> seeder) where TContext : DbContext

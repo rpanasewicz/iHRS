@@ -5,26 +5,21 @@ using System.Reflection;
 
 namespace iHRS.Domain.Common
 {
-    public abstract class Enumeration<TKey> : IComparable where TKey : IComparable, IEquatable<TKey>
+    public abstract class Enumeration : IComparable 
     {
         public string Name { get; private set; }
 
-        public TKey Id { get; }
+        public int Id { get; }
 
-        protected Enumeration(TKey id, string name)
+        protected Enumeration(int id, string name)
         {
             Id = id;
             Name = name;
         }
 
-        protected Enumeration()
-        {
-
-        }
-
         public override string ToString() => Name;
 
-        public static IEnumerable<T> GetAll<T>() where T : Enumeration<TKey>
+        public static IEnumerable<T> GetAll<T>() where T : Enumeration
         {
             var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
@@ -33,7 +28,7 @@ namespace iHRS.Domain.Common
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Enumeration<TKey> otherValue))
+            if (!(obj is Enumeration otherValue))
                 return false;
 
             var typeMatches = GetType() == obj.GetType();
@@ -44,19 +39,19 @@ namespace iHRS.Domain.Common
 
         public override int GetHashCode() => Id.GetHashCode();
 
-        public static T FromValue<T>(TKey value) where T : Enumeration<TKey>
+        public static T FromValue<T>(int value) where T : Enumeration
         {
-            var matchingItem = Parse<T, TKey>(value, "value", item => item.Id.Equals(value));
+            var matchingItem = Parse<T, int>(value, "value", item => item.Id.Equals(value));
             return matchingItem;
         }
 
-        public static T FromDisplayName<T>(string displayName) where T : Enumeration<TKey>
+        public static T FromDisplayName<T>(string displayName) where T : Enumeration
         {
             var matchingItem = Parse<T, string>(displayName, "display name", item => item.Name == displayName);
             return matchingItem;
         }
 
-        private static T Parse<T, TK>(TK value, string description, Func<T, bool> predicate) where T : Enumeration<TKey>
+        private static T Parse<T, TK>(TK value, string description, Func<T, bool> predicate) where T : Enumeration
         {
             var matchingItem = GetAll<T>().FirstOrDefault(predicate);
 
@@ -66,17 +61,7 @@ namespace iHRS.Domain.Common
             return matchingItem;
         }
 
-        public int CompareTo(object other) => Id.CompareTo(((Enumeration<TKey>)other).Id);
+        public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
     }
 
-    public abstract class Enumeration : Enumeration<int>
-    {
-        protected Enumeration()
-        {
-        }
-
-        protected Enumeration(int id, string name) : base(id, name)
-        {
-        }
-    }
 }

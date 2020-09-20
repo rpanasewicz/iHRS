@@ -41,6 +41,18 @@ namespace iHRS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReservationStatuses",
+                columns: table => new
+                {
+                    ReservationStatusId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReservationStatuses", x => x.ReservationStatusId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -92,8 +104,10 @@ namespace iHRS.Infrastructure.Migrations
                     ReservationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
+                    NumberOfPersons = table.Column<int>(type: "int", nullable: false),
+                    RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoomId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -110,11 +124,17 @@ namespace iHRS.Infrastructure.Migrations
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservations_Rooms_RoomId1",
-                        column: x => x.RoomId1,
+                        name: "FK_Reservations_ReservationStatuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "ReservationStatuses",
+                        principalColumn: "ReservationStatusId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Rooms_RoomId",
+                        column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "RoomId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -123,9 +143,14 @@ namespace iHRS.Infrastructure.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_RoomId1",
+                name: "IX_Reservations_RoomId",
                 table: "Reservations",
-                column: "RoomId1");
+                column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_StatusId",
+                table: "Reservations",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rooms_HotelId",
@@ -143,6 +168,9 @@ namespace iHRS.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "ReservationStatuses");
 
             migrationBuilder.DropTable(
                 name: "Rooms");

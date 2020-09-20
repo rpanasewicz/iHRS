@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Linq;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
@@ -56,5 +57,34 @@ namespace iHRS.Infrastructure.EntityConfigurations
             ConfigureRelationships(entity);
         }
 
+    }
+
+    internal abstract class EnumerationBaseConfiguration<T> : IEntityTypeConfiguration<T> where T : Enumeration
+    {
+        public abstract string TableName { get; }
+        public abstract string PrimaryKeyColumnName { get; }
+
+        public void Configure(EntityTypeBuilder<T> entity)
+        {
+            entity.ToTable(TableName);
+
+            entity.Property(e => e.Id)
+                .HasColumnName(PrimaryKeyColumnName)
+                .IsRequired()
+                .ValueGeneratedNever();
+
+            entity.Property(e => e.Name)
+                .HasColumnName("Name")
+                .HasColumnType("nvarchar(128)")
+                .IsRequired()
+                .ValueGeneratedNever();
+
+            typeof(T)
+                .GetProperties()
+                .Where(p => p.PropertyType.IsAssignableFrom(typeof(Enumeration)))
+                .Select(p => p.Name)
+                .ToList()
+                .ForEach(p => entity.Ignore(p));
+        }
     }
 }
