@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using iHRS.Domain.Models;
+﻿using iHRS.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iHRS.Infrastructure.EntityConfigurations
@@ -12,6 +8,8 @@ namespace iHRS.Infrastructure.EntityConfigurations
     {
         public override void ConfigureFields(EntityTypeBuilder<Reservation> entity)
         {
+            entity.Property(r => r.StartDate).HasColumnType("datetime2(7)");
+            entity.Property(r => r.EndDate).HasColumnType("datetime2(7)");
         }
 
         public override void ConfigureRelationships(EntityTypeBuilder<Reservation> entity)

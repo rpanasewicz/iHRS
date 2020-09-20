@@ -111,6 +111,9 @@ namespace iHRS.Infrastructure.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2(7)");
+
                     b.Property<DateTime?>("ExpirationDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("ExpirationDate");
@@ -127,6 +130,9 @@ namespace iHRS.Infrastructure.Migrations
 
                     b.Property<Guid?>("RoomId1")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2(7)");
 
                     b.HasKey("Id");
 
