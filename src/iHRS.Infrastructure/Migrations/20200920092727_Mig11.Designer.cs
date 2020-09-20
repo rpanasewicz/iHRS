@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iHRS.Infrastructure;
 
 namespace iHRS.Infrastructure.Migrations
 {
     [DbContext(typeof(HRSContext))]
-    partial class HRSContextModelSnapshot : ModelSnapshot
+    [Migration("20200920092727_Mig11")]
+    partial class Mig11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,32 +24,23 @@ namespace iHRS.Infrastructure.Migrations
             modelBuilder.Entity("iHRS.Domain.Models.Customer", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CustomerId");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)")
-                        .HasColumnName("CreatedBy");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedOn");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("ExpirationDate");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)")
-                        .HasColumnName("ModifiedBy");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("ModifiedOn");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -95,35 +88,26 @@ namespace iHRS.Infrastructure.Migrations
             modelBuilder.Entity("iHRS.Domain.Models.Reservation", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ReservationId");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)")
-                        .HasColumnName("CreatedBy");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedOn");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("ExpirationDate");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)")
-                        .HasColumnName("ModifiedBy");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("ModifiedOn");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("RoomId1")
                         .HasColumnType("uniqueidentifier");

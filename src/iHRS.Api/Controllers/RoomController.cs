@@ -30,6 +30,11 @@ namespace iHRS.Api.Controllers
             return Created($"hotels/{cmd.HotelId}/rooms/{roomId}", new { cmd.HotelId, roomId });
 
         }
-
+        [HttpPost("{roomId}")]
+        public async Task<IActionResult> CreateReservation(MakeReservationCommand cmd)  
+        {
+            var reservationId = await _commandDispatcher.SendAsync(cmd);
+            return Created($"hotels/{cmd.HotelId}/rooms/{cmd.RoomId}/reservations/{reservationId}", new { cmd.HotelId, cmd.RoomId, reservationId });
+        }
     }
 }

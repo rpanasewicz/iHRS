@@ -14,5 +14,6 @@ namespace iHRS.Infrastructure.Auth
         }
 
         public Guid UserId => Guid.TryParse(_httpContext.User?.Identity?.Name, out var userId) ? userId : Guid.Empty;
+        public Guid CustomerId => Guid.TryParse(_httpContext.User?.Identity?.Name, out var userId) ? userId : Guid.Empty;
     }
 }

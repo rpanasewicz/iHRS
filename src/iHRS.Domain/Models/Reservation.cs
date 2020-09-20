@@ -17,8 +17,9 @@ namespace iHRS.Domain.Models
 
         private Reservation() { }
 
-        private Reservation(DateTime startDate, DateTime endDate, int numberOfPersons, Customer customer, Room room)
+        private Reservation(Guid reservationId, DateTime startDate, DateTime endDate, int numberOfPersons, Customer customer, Room room)
         {
+            Id = reservationId;
             StartDate = startDate;
             EndDate = endDate;
             NumberOfPersons = numberOfPersons;
@@ -28,9 +29,9 @@ namespace iHRS.Domain.Models
             RoomId = room.Id;
         }
 
-        internal static Reservation CreateInstance(DateTime startDate, DateTime endDate, int numberOfPersons, Customer customer, Room room)
+        internal static Reservation CreateNew(DateTime startDate, DateTime endDate, int numberOfPersons, Customer customer, Room room)
         {
-            return new Reservation(startDate, endDate, numberOfPersons, customer, room);
+            return new Reservation(Guid.NewGuid(), startDate, endDate, numberOfPersons, customer, room);
         }
     }
 }
