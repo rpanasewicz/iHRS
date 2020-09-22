@@ -1,22 +1,23 @@
-﻿using iHRS.Api.Configuration;
-using iHRS.Application.Commands.Hotels;
+﻿using iHRS.Application.Commands.Hotels;
 using iHRS.Application.Common;
+using iHRS.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace iHRS.Api.Controllers
 {
-    [JwtAuth]
     [ApiController]
     [Route("hotels")]
     public class HotelController : Controller
     {
         private readonly ICommandDispatcher _commandDispatcher;
+        private readonly IHotelQueries _hotelQueries;
 
-        public HotelController(ICommandDispatcher commandDispatcher)
+        public HotelController(ICommandDispatcher commandDispatcher, IHotelQueries hotelQueries)
         {
             _commandDispatcher = commandDispatcher;
+            _hotelQueries = hotelQueries;
         }
 
         [HttpPost]
@@ -39,5 +40,9 @@ namespace iHRS.Api.Controllers
             var templateId = await _commandDispatcher.SendAsync(cmd);
             return Created($"hotels/{cmd.HotelId}/messageTemplates/{templateId}", new { cmd.HotelId, templateId });
         }
+
+        [HttpGet]
+        public IActionResult GetAll()
+            => Ok(_hotelQueries.GetAll());
     }
 }

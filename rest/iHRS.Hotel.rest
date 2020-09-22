@@ -27,3 +27,7 @@ Authorization: Bearer {{accessToken}}
   "messageType": 1,
   "communicationMethod": 1
 }
+
+###
+GET {{url}}
+Content-Type: application/json

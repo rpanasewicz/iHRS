@@ -5,8 +5,8 @@ namespace iHRS.Domain.DomainEvents
 {
     public class ReservationCreatedDomainEvent : IDomainEvent
     {
-        public Reservation Reservation { get;  }
-        public Room Room { get;  }
+        public Reservation Reservation { get; }
+        public Room Room { get; }
 
         public ReservationCreatedDomainEvent(Reservation reservation, Room room)
         {

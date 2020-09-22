@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using iHRS.Domain.Models;
+﻿using iHRS.Domain.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iHRS.Infrastructure.EntityConfigurations
@@ -12,7 +7,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
     {
         public override void ConfigureFields(EntityTypeBuilder<MessageTemplate> entity)
         {
-            
+
         }
 
         public override void ConfigureRelationships(EntityTypeBuilder<MessageTemplate> entity)

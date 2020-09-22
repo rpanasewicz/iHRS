@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace iHRS.Api.Binders
 {
@@ -12,8 +12,8 @@ namespace iHRS.Api.Binders
 
         public BodyAndRouteModelBinder(IModelBinder bodyBinder, IModelBinder complexBinder)
         {
-            _bodyBinder = bodyBinder;
-            _complexBinder = complexBinder;
+            _bodyBinder = bodyBinder ?? throw new ArgumentNullException(nameof(bodyBinder));
+            _complexBinder = complexBinder ?? throw new ArgumentNullException(nameof(complexBinder));
         }
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)

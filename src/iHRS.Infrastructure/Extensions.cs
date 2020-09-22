@@ -1,5 +1,6 @@
 ﻿using iHRS.Application.Auth;
 using iHRS.Application.Common;
+using iHRS.Application.Queries;
 using iHRS.Domain.Common;
 using iHRS.Domain.DomainEvents.Abstractions;
 using iHRS.Infrastructure.Auth;
@@ -19,8 +20,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using iHRS.Domain.Models;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace iHRS.Infrastructure
 {
@@ -70,6 +69,14 @@ namespace iHRS.Infrastructure
                         .AddClasses(c => c.AssignableTo(typeof(IRepository<>)))
                         .AsImplementedInterfaces()
                         .WithScopedLifetime());
+
+            services
+                .Scan(scan =>
+                    scan
+                        .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+                        .AddClasses(c => c.AssignableTo(typeof(IQuery)))
+                        .AsImplementedInterfaces()
+                        .WithTransientLifetime());
 
 
             services.AddSingleton<ICommandDispatcher, CommandDispatcher>();

@@ -1,6 +1,7 @@
 ﻿using iHRS.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -72,5 +73,11 @@ namespace iHRS.Infrastructure
                 .Include(includeExpression3)
                 .FirstOrDefaultAsync(filterExpression);
         }
+
+        public async Task LoadProperty<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class
+            => await _context.Entry(entity).Collection(propertyExpression).LoadAsync();
+
+        public async Task LoadProperty<TProperty>(T entity, Expression<Func<T, TProperty>> propertyExpression) where TProperty : class
+            => await _context.Entry(entity).Reference(propertyExpression).LoadAsync();
     }
 }

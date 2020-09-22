@@ -1,9 +1,9 @@
 ﻿using iHRS.Domain.Common;
+using iHRS.Domain.DomainEvents;
+using iHRS.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using iHRS.Domain.DomainEvents;
-using iHRS.Domain.Exceptions;
 
 namespace iHRS.Domain.Models
 {
@@ -43,10 +43,10 @@ namespace iHRS.Domain.Models
 
         public Reservation CreateReservation(DateTime fromDate, DateTime toDate, int numberOfPersons, Customer customer)
         {
-            if(_reservations is null) throw new PropertyNotInitializedException(nameof(Reservations));
+            if (_reservations is null) throw new PropertyNotInitializedException(nameof(Reservations));
 
             if (_reservations.Any(r => r.StartDate < toDate && r.EndDate > fromDate))
-                throw new RoomAlreadyReserved();;
+                throw new RoomAlreadyReserved(); ;
 
             var reservation = Reservation.CreateNew(fromDate, toDate, numberOfPersons, customer, this);
 

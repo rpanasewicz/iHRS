@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using iHRS.Application.Auth;
+﻿using iHRS.Application.Auth;
 using iHRS.Application.Common;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace iHRS.Application.Commands.Rooms
 {
@@ -11,15 +11,15 @@ namespace iHRS.Application.Commands.Rooms
     {
         public Guid HotelId { get; }
         public Guid RoomId { get; }
-        public DateTime StartDate { get;  }
-        public DateTime EndDate { get;  }
-        public int NumberOfPersons { get;  }
-        public string CustomerFirstName { get;  }
-        public string CustomerLastName { get;  }
-        public string CustomerEmailAddress { get;  }
-        public string CustomerPhoneNumber { get;  }
+        public DateTime StartDate { get; }
+        public DateTime EndDate { get; }
+        public int NumberOfPersons { get; }
+        public string CustomerFirstName { get; }
+        public string CustomerLastName { get; }
+        public string CustomerEmailAddress { get; }
+        public string CustomerPhoneNumber { get; }
 
-        public MakeReservationCommand( Guid hotelId,Guid roomId, DateTime startDate, DateTime endDate, int numberOfPersons,
+        public MakeReservationCommand(Guid hotelId, Guid roomId, DateTime startDate, DateTime endDate, int numberOfPersons,
             string customerFirstName, string customerLastName, string customerEmailAddress, string customerPhoneNumber)
         {
             HotelId = hotelId;

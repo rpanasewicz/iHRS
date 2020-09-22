@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using System;
 
 namespace iHRS.Api.Binders
 {
     public class BodyAndRouteModelBinderProvider : IModelBinderProvider
     {
-        private BodyModelBinderProvider _bodyModelBinderProvider;
-        private ComplexTypeModelBinderProvider _complexTypeModelBinderProvider;
+        private readonly BodyModelBinderProvider _bodyModelBinderProvider;
+        private readonly ComplexTypeModelBinderProvider _complexTypeModelBinderProvider;
 
         public BodyAndRouteModelBinderProvider(BodyModelBinderProvider bodyModelBinderProvider,
             ComplexTypeModelBinderProvider complexTypeModelBinderProvider)
         {
-            _bodyModelBinderProvider = bodyModelBinderProvider;
-            _complexTypeModelBinderProvider = complexTypeModelBinderProvider;
+            _bodyModelBinderProvider = bodyModelBinderProvider ?? throw new ArgumentNullException(nameof(bodyModelBinderProvider));
+            _complexTypeModelBinderProvider = complexTypeModelBinderProvider ?? throw new ArgumentNullException(nameof(complexTypeModelBinderProvider));
         }
 
         public IModelBinder GetBinder(ModelBinderProviderContext context)
@@ -20,7 +21,11 @@ namespace iHRS.Api.Binders
             var bodyBinder = _bodyModelBinderProvider.GetBinder(context);
             var complexBinder = _complexTypeModelBinderProvider.GetBinder(context);
 
-            return new BodyAndRouteModelBinder(bodyBinder, complexBinder);
+            if (context.BindingInfo.BindingSource != null && context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Body))
+                return new BodyAndRouteModelBinder(bodyBinder, complexBinder);
+
+
+            return null;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace iHRS.Domain.Common
 {
-    public abstract class Enumeration : IComparable 
+    public abstract class Enumeration : IComparable
     {
         public string Name { get; private set; }
 

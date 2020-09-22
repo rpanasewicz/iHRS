@@ -58,9 +58,9 @@ namespace iHRS.Domain.Models
         public MessageTemplate AddMessageTemplate(string body, MessageType type,
             CommunicationMethod communicationMethod)
         {
-            if(_messageTemplates is null) throw new PropertyNotInitializedException(nameof(MessageTemplates));
+            if (_messageTemplates is null) throw new PropertyNotInitializedException(nameof(MessageTemplates));
 
-            if(MessageTemplates.Any(m => m.MessageType == type && m.CommunicationMethod == communicationMethod))
+            if (MessageTemplates.Any(m => m.MessageType == type && m.CommunicationMethod == communicationMethod))
                 throw new MessageTemplateAlreadyExist();
 
             var template = MessageTemplate.CreateNew(body, this, type, communicationMethod);

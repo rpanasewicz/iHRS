@@ -1,5 +1,5 @@
-﻿using System;
-using iHRS.Domain.Common;
+﻿using iHRS.Domain.Common;
+using System;
 
 namespace iHRS.Domain.Models
 {
@@ -25,7 +25,7 @@ namespace iHRS.Domain.Models
 
         private MessageTemplate()
         {
-            
+
         }
 
         private MessageTemplate(Guid messageTemplateId, string message, Hotel hotel, MessageType messageType, CommunicationMethod communicationMethod)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -9,6 +10,9 @@ namespace iHRS.Domain.Common
         Task<bool> ExistsAsync(Guid id);
         Task AddAsync(T entity);
         Task DeleteAsync(T entity);
+
+        Task LoadProperty<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
+        Task LoadProperty<TProperty>(T entity, Expression<Func<T, TProperty>> propertyExpression) where TProperty : class;
 
         Task<T> GetAsync(Guid id);
         Task<T> GetAsync<TProperty1>(Guid id, Expression<Func<T, TProperty1>> includeExpression1);

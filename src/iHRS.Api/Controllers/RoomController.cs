@@ -2,10 +2,8 @@
 using iHRS.Application.Commands.Rooms;
 using iHRS.Application.Common;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using iHRS.Domain.Models;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace iHRS.Api.Controllers
 {
@@ -31,7 +29,7 @@ namespace iHRS.Api.Controllers
 
         }
         [HttpPost("{roomId}")]
-        public async Task<IActionResult> CreateReservation(MakeReservationCommand cmd)  
+        public async Task<IActionResult> CreateReservation(MakeReservationCommand cmd)
         {
             var reservationId = await _commandDispatcher.SendAsync(cmd);
             return Created($"hotels/{cmd.HotelId}/rooms/{cmd.RoomId}/reservations/{reservationId}", new { cmd.HotelId, cmd.RoomId, reservationId });
