@@ -1,0 +1,10 @@
+@url = http://localhost:5000/customer
+@linkRef = secret
+###
+POST {{url}}
+Content-Type: application/json
+{
+  "emailAddress" : "harry.potter@example.com",
+  "firstName" : "Harry",
+  "lastName" : "Potter"
+}

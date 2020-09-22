@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace iHRS.Api.Controllers
 {
-    [JwtAuth]
     [ApiController]
     [Route("hotels/{hotelId}/rooms")]
     public class RoomController : Controller
@@ -21,6 +20,7 @@ namespace iHRS.Api.Controllers
             _logger = logger;
         }
 
+        [JwtAuth]
         [HttpPost]
         public async Task<IActionResult> Post(CreateRoomCommand cmd)
         {
@@ -28,6 +28,7 @@ namespace iHRS.Api.Controllers
             return Created($"hotels/{cmd.HotelId}/rooms/{roomId}", new { cmd.HotelId, roomId });
 
         }
+
         [HttpPost("{roomId}")]
         public async Task<IActionResult> CreateReservation(MakeReservationCommand cmd)
         {

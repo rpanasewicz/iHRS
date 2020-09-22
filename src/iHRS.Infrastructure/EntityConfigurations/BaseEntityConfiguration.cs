@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    internal abstract class EntityBaseConfiguration<T> : IEntityTypeConfiguration<T> where T : Entity
+    internal abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : Entity
     {
         public abstract void ConfigureFields(EntityTypeBuilder<T> entity);
         public abstract void ConfigureRelationships(EntityTypeBuilder<T> entity);
@@ -53,38 +53,16 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 .IsRequired(false)
                 .ValueGeneratedNever();
 
-            typeof(T)
-                .GetProperties()
-                .Where(p => p.PropertyType.IsSubclassOf(typeof(Enumeration)) && p.PropertyType.IsClass && !p.PropertyType.IsAbstract)
-                .Select(p => p.Name)
-                .ToList()
-                .ForEach(p => entity.Ignore(p));
+            //typeof(T)
+            //    .GetProperties()
+            //    .Where(p => p.PropertyType.IsSubclassOf(typeof(Enumeration)) && p.PropertyType.IsClass && !p.PropertyType.IsAbstract)
+            //    .Select(p => p.Name)
+            //    .ToList()
+            //    .ForEach(p => entity.Ignore(p));
 
             ConfigureFields(entity);
             ConfigureRelationships(entity);
         }
 
-    }
-
-    internal abstract class EnumerationBaseConfiguration<T> : IEntityTypeConfiguration<T> where T : Enumeration
-    {
-        public abstract string TableName { get; }
-        public abstract string PrimaryKeyColumnName { get; }
-
-        public void Configure(EntityTypeBuilder<T> entity)
-        {
-            entity.ToTable(TableName);
-
-            entity.Property(e => e.Id)
-                .HasColumnName(PrimaryKeyColumnName)
-                .IsRequired()
-                .ValueGeneratedNever();
-
-            entity.Property(e => e.Name)
-                .HasColumnName("Name")
-                .HasColumnType("nvarchar(128)")
-                .IsRequired()
-                .ValueGeneratedNever();
-        }
     }
 }

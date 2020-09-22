@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    internal class UserConfiguration : EntityBaseConfiguration<User>
+    internal class UserConfiguration : BaseEntityConfiguration<User>
     {
         public override void ConfigureFields(EntityTypeBuilder<User> entity)
         {

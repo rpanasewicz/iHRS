@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    class MessageTemplateConfiguration : EntityBaseConfiguration<MessageTemplate>
+    internal class MessageTemplateConfiguration : BaseEntityConfiguration<MessageTemplate>
     {
         public override void ConfigureFields(EntityTypeBuilder<MessageTemplate> entity)
         {
@@ -16,11 +16,5 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
         public override string TableName => "MessageTemplates";
         public override string PrimaryKeyColumnName => "MessageTemplateId";
-    }
-
-    class MessageTypeConfiguration : EnumerationBaseConfiguration<MessageType>
-    {
-        public override string TableName => "MessageTypes";
-        public override string PrimaryKeyColumnName => "MessageTypeId";
     }
 }

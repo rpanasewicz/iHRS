@@ -55,6 +55,9 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("ExpirationDate");
 
+                    b.Property<Guid>("HotelId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
                         .HasMaxLength(32)
@@ -66,6 +69,8 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnName("ModifiedOn");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
 
                     b.ToTable("Customers");
                 });
@@ -345,6 +350,57 @@ namespace iHRS.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("iHRS.Domain.Models.ValidationLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ValidationLinkId");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)")
+                        .HasColumnName("CreatedBy");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedOn");
+
+                    b.Property<Guid?>("CustomerId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ExpirationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ExpirationDate");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)")
+                        .HasColumnName("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ModifiedOn");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId1");
+
+                    b.ToTable("ValidationLinks");
+                });
+
+            modelBuilder.Entity("iHRS.Domain.Models.Customer", b =>
+                {
+                    b.HasOne("iHRS.Domain.Models.Hotel", "Hotel")
+                        .WithMany("Customers")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("iHRS.Domain.Models.MessageTemplate", b =>
                 {
                     b.HasOne("iHRS.Domain.Models.CommunicationMethod", "CommunicationMethod")
@@ -383,7 +439,7 @@ namespace iHRS.Infrastructure.Migrations
                     b.HasOne("iHRS.Domain.Models.Room", "Room")
                         .WithMany("Reservations")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("iHRS.Domain.Models.ReservationStatus", "Status")
@@ -404,19 +460,30 @@ namespace iHRS.Infrastructure.Migrations
                     b.HasOne("iHRS.Domain.Models.Hotel", "Hotel")
                         .WithMany("Rooms")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Hotel");
                 });
 
+            modelBuilder.Entity("iHRS.Domain.Models.ValidationLink", b =>
+                {
+                    b.HasOne("iHRS.Domain.Models.Customer", null)
+                        .WithMany("ValidationLinks")
+                        .HasForeignKey("CustomerId1");
+                });
+
             modelBuilder.Entity("iHRS.Domain.Models.Customer", b =>
                 {
                     b.Navigation("Reservations");
+
+                    b.Navigation("ValidationLinks");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Hotel", b =>
                 {
+                    b.Navigation("Customers");
+
                     b.Navigation("MessageTemplates");
 
                     b.Navigation("Rooms");

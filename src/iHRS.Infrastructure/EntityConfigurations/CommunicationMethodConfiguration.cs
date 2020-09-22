@@ -2,7 +2,7 @@
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    class CommunicationMethodConfiguration : EnumerationBaseConfiguration<CommunicationMethod>
+    internal class CommunicationMethodConfiguration : BaseEnumerationConfiguration<CommunicationMethod>
     {
         public override string TableName => "CommunicationMethods";
         public override string PrimaryKeyColumnName => "CommunicationMethodId";

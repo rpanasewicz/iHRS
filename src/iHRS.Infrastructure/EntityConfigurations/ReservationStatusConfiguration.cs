@@ -2,7 +2,7 @@
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    internal class ReservationStatusConfiguration : EnumerationBaseConfiguration<ReservationStatus>
+    internal class ReservationStatusConfiguration : BaseEnumerationConfiguration<ReservationStatus>
     {
         public override string TableName => "ReservationStatuses";
         public override string PrimaryKeyColumnName => "ReservationStatusId";

@@ -4,6 +4,7 @@ using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using System;
 using System.Threading.Tasks;
+using iHRS.Application.Exceptions;
 
 namespace iHRS.Application.Commands.Rooms
 {
@@ -50,13 +51,15 @@ namespace iHRS.Application.Commands.Rooms
 
         public async Task<Guid> Handle(MakeReservationCommand cmd)
         {
+            var room = await _roomRepository.GetAsync(cmd.RoomId, r => r.Reservations, r => r.Hotel);
+
+            if(room is null) throw new NotFoundException(nameof(Room), cmd.RoomId);
+
             var customer = _auth.CustomerId == default
                 ? await _customerRepository.GetAsync(_auth.CustomerId)
-                : Customer.CreateNew(cmd.CustomerFirstName, cmd.CustomerLastName, cmd.CustomerEmailAddress, cmd.CustomerPhoneNumber);
+                : Customer.CreateNew(cmd.CustomerFirstName, cmd.CustomerLastName, cmd.CustomerEmailAddress, cmd.CustomerPhoneNumber, room.Hotel);
 
             await _customerRepository.AddAsync(customer);
-
-            var room = await _roomRepository.GetAsync(cmd.RoomId, r => r.Reservations);
 
             var reservation = room.CreateReservation(cmd.StartDate, cmd.EndDate, cmd.NumberOfPersons, customer);
 

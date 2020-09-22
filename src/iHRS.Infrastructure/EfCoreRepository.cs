@@ -41,20 +41,24 @@ namespace iHRS.Infrastructure
         public Task<T> GetAsync<TProperty1, TProperty2>(Guid id, Expression<Func<T, TProperty1>> includeExpression1, Expression<Func<T, TProperty2>> includeExpression2)
             => GetAsync(e => e.Id == id, includeExpression1, includeExpression2);
 
+        public Task<T> GetAsync<TProperty1, TProperty2>(Guid id, Expression<Func<T, TProperty1>> includeExpression1, Expression<Func<TProperty1, TProperty2>> thenIncludeExpression)
+            => GetAsync(e => e.Id == id, includeExpression1, thenIncludeExpression);
+
+
         public Task<T> GetAsync<TProperty1, TProperty2, TProperty3>(Guid id, Expression<Func<T, TProperty1>> includeExpression1, Expression<Func<T, TProperty2>> includeExpression2, Expression<Func<T, TProperty3>> includeExpression3)
             => GetAsync(e => e.Id == id, includeExpression1, includeExpression2, includeExpression3);
 
         public async Task<T> GetAsync(Expression<Func<T, bool>> filterExpression)
         {
             return await _context.Set<T>()
-                .FirstOrDefaultAsync(filterExpression);
+                .SingleOrDefaultAsync(filterExpression);
         }
 
         public async Task<T> GetAsync<TProperty1>(Expression<Func<T, bool>> filterExpression, Expression<Func<T, TProperty1>> includeExpression1)
         {
             return await _context.Set<T>()
                 .Include(includeExpression1)
-                .FirstOrDefaultAsync(filterExpression);
+                .SingleOrDefaultAsync(filterExpression);
         }
 
         public async Task<T> GetAsync<TProperty1, TProperty2>(Expression<Func<T, bool>> filterExpression, Expression<Func<T, TProperty1>> includeExpression1, Expression<Func<T, TProperty2>> includeExpression2)
@@ -62,7 +66,15 @@ namespace iHRS.Infrastructure
             return await _context.Set<T>()
                 .Include(includeExpression1)
                 .Include(includeExpression2)
-                .FirstOrDefaultAsync(filterExpression);
+                .SingleOrDefaultAsync(filterExpression);
+        }
+
+        public async Task<T> GetAsync<TProperty1, TProperty2>(Expression<Func<T, bool>> filterExpression, Expression<Func<T, TProperty1>> includeExpression1, Expression<Func<TProperty1, TProperty2>> thenIncludeExpression)
+        {
+            return await _context.Set<T>()
+                .Include(includeExpression1)
+                .ThenInclude(thenIncludeExpression)
+                .SingleOrDefaultAsync(filterExpression);
         }
 
         public async Task<T> GetAsync<TProperty1, TProperty2, TProperty3>(Expression<Func<T, bool>> filterExpression, Expression<Func<T, TProperty1>> includeExpression1, Expression<Func<T, TProperty2>> includeExpression2, Expression<Func<T, TProperty3>> includeExpression3)
@@ -71,7 +83,7 @@ namespace iHRS.Infrastructure
                 .Include(includeExpression1)
                 .Include(includeExpression2)
                 .Include(includeExpression3)
-                .FirstOrDefaultAsync(filterExpression);
+                .SingleOrDefaultAsync(filterExpression);
         }
 
         public async Task LoadProperty<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class

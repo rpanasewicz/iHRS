@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    internal class HotelConfiguration : EntityBaseConfiguration<Hotel>
+    internal class HotelConfiguration : BaseEntityConfiguration<Hotel>
     {
         public override void ConfigureFields(EntityTypeBuilder<Hotel> entity)
         {

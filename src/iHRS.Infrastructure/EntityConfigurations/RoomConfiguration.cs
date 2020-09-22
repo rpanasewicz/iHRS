@@ -1,9 +1,10 @@
 ﻿using iHRS.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    internal class RoomConfiguration : EntityBaseConfiguration<Room>
+    internal class RoomConfiguration : BaseEntityConfiguration<Room>
     {
         public override void ConfigureFields(EntityTypeBuilder<Room> entity)
         {
@@ -13,7 +14,8 @@ namespace iHRS.Infrastructure.EntityConfigurations
         {
             entity.HasOne(r => r.Hotel)
                 .WithMany(h => h.Rooms)
-                .HasForeignKey(r => r.HotelId);
+                .HasForeignKey(r => r.HotelId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
         public override string TableName => "Rooms";

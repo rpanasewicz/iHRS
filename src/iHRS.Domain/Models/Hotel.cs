@@ -20,13 +20,22 @@ namespace iHRS.Domain.Models
             get => _messageTemplates.AsEnumerable();
             private set => _messageTemplates = new HashSet<MessageTemplate>(value);
         }
+        public IEnumerable<Customer> Customers
+        {
+            get => _customers.AsEnumerable();
+            private set => _customers = new HashSet<Customer>(value);
+        }
 
         private ISet<Room> _rooms;
         private ISet<MessageTemplate> _messageTemplates;
+        private ISet<Customer> _customers;
 
         private Hotel() { } // For EF
 
-        private Hotel(Guid id, string name, IEnumerable<Room> rooms = null, IEnumerable<MessageTemplate> messageTemplates = null)
+        private Hotel(Guid id, string name,
+            IEnumerable<Room> rooms = null,
+            IEnumerable<MessageTemplate> messageTemplates = null,
+            IEnumerable<Customer> customers = null)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
@@ -35,6 +44,7 @@ namespace iHRS.Domain.Models
             Name = name;
             Rooms = rooms ?? Enumerable.Empty<Room>();
             MessageTemplates = messageTemplates ?? Enumerable.Empty<MessageTemplate>();
+            Customers = customers ?? Enumerable.Empty<Customer>();
         }
 
         public static Hotel CreateNew(string name)
