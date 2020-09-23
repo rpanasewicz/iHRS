@@ -13,8 +13,8 @@ namespace iHRS.Api.Binders
                 providers.Single(provider => provider.GetType() == typeof(BodyModelBinderProvider)) as
                     BodyModelBinderProvider;
             var complexProvider =
-                providers.Single(provider => provider.GetType() == typeof(ComplexTypeModelBinderProvider)) as
-                    ComplexTypeModelBinderProvider;
+                providers.Single(provider => provider.GetType() == typeof(ComplexObjectModelBinderProvider)) as
+                    ComplexObjectModelBinderProvider;
 
             var bodyAndRouteProvider = new BodyAndRouteModelBinderProvider(bodyProvider, complexProvider);
 

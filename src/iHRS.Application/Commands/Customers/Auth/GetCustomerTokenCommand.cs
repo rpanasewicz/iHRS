@@ -1,11 +1,10 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using iHRS.Application.Auth;
+﻿using iHRS.Application.Auth;
 using iHRS.Application.Common;
 using iHRS.Application.Exceptions;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace iHRS.Application.Commands.Customers.Auth
 {
@@ -36,10 +35,10 @@ namespace iHRS.Application.Commands.Customers.Auth
 
             var link = await _linkRepository.GetAsync(linkId, l => l.Customer, c => c.Hotel);
 
-            if(link is null)
+            if (link is null)
                 throw new NotFoundException(nameof(ValidationLink), cmd.LinkReference);
 
-            return  _jwtHandler.CreateToken(link.CustomerId.ToString(), "customer");
+            return _jwtHandler.CreateToken(link.CustomerId.ToString(), "customer");
         }
     }
 }

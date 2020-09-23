@@ -15,8 +15,4 @@
     <ProjectReference Include="..\iHRS.Domain\iHRS.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\NewFolder\" />
-  </ItemGroup>
-
 </Project>

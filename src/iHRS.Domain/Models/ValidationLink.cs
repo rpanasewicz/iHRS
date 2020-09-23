@@ -14,15 +14,16 @@ namespace iHRS.Domain.Models
 
         }
 
-        private ValidationLink(Customer customer)
+        private ValidationLink(Guid validationLinkId, Customer customer)
         {
+            Id = validationLinkId;
             Customer = customer;
             CustomerId = customer.Id;
         }
 
         internal static ValidationLink CreateNew(Customer customer, DateTime expirationDate)
         {
-            var validationLink = new ValidationLink(customer);
+            var validationLink = new ValidationLink(Guid.NewGuid(), customer);
             validationLink.ExpirationDate = expirationDate;
 
             validationLink.AddEvent(new ValidationLinkCreatedDomainEvent(validationLink, customer));

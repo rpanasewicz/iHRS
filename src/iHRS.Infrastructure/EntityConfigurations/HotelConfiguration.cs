@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using iHRS.Domain.Models;
+﻿using iHRS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

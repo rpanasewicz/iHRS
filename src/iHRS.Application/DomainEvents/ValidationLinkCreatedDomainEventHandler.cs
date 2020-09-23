@@ -13,37 +13,40 @@ namespace iHRS.Application.DomainEvents
     public class ValidationLinkCreatedDomainEventHandler : IDomainEventHandler<ValidationLinkCreatedDomainEvent>
     {
         private readonly IRepository<MessageTemplate> _templateRepository;
+        private readonly IRepository<Customer> _customerRepository;
         private readonly IMessageService _messageService;
 
-        public ValidationLinkCreatedDomainEventHandler(IRepository<MessageTemplate> templateRepository, IMessageService messageService)
+        public ValidationLinkCreatedDomainEventHandler(IRepository<MessageTemplate> templateRepository,
+            IMessageService messageService, IRepository<Customer> customerRepository)
         {
             _templateRepository = templateRepository;
             _messageService = messageService;
+            _customerRepository = customerRepository;
         }
 
-        public async Task HandleAsync(ValidationLinkCreatedDomainEvent @event)
+        public async Task Handle(ValidationLinkCreatedDomainEvent domainEvent)
         {
             var template = await _templateRepository.GetAsync(t =>
-                t.HotelId == @event.Customer.HotelId && t.MessageTypeId == MessageType.CustomerLogin.Id);
+                t.HotelId == domainEvent.Customer.HotelId && t.MessageTypeId == MessageType.CustomerLogin.Id);
 
             var formatArgs = new
             {
                 Hotel = new
                 {
-                    @event.Customer.Hotel.Name
+                    domainEvent.Customer.Hotel.Name
                 },
                 Customer = new
                 {
-                    @event.Customer.FirstName,
-                    @event.Customer.LastName,
+                    domainEvent.Customer.FirstName,
+                    domainEvent.Customer.LastName,
                 },
                 ValidationLink =
-                    HttpUtility.UrlEncode(Convert.ToBase64String(@event.ValidationLink.Id.ToByteArray()))
+                    HttpUtility.UrlEncode(Convert.ToBase64String(domainEvent.ValidationLink.Id.ToByteArray()))
             };
 
             var message = Smart.Format(template.Message, formatArgs);
 
-            await _messageService.SendMessage(message, new[] { @event.Customer.EmailAddress }, "email");
+            await _messageService.SendMessage(message, new[] { domainEvent.Customer.EmailAddress }, "email");
         }
     }
 }

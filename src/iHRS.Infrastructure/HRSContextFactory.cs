@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using iHRS.Domain.DomainEvents.Abstractions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -14,7 +12,7 @@ namespace iHRS.Infrastructure
             optionsBuilder.UseSqlServer(
                 "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=NOT_EXISTING_DATABASE;Integrated Security=True;");
 
-            return new HRSContext(optionsBuilder.Options, new NullHttpContextAccessor(), new NoEventPublisher());
+            return new HRSContext(optionsBuilder.Options, new NullHttpContextAccessor());
         }
 
         private class NullHttpContextAccessor : IHttpContextAccessor
@@ -24,13 +22,6 @@ namespace iHRS.Infrastructure
                 get => null;
                 set { }
             }
-        }
-
-        private class NoEventPublisher : IDomainEventPublisher
-        {
-            public Task PublishAsync<T>(T @event) where T : class, IDomainEvent
-                => Task.CompletedTask;
-
         }
     }
 }

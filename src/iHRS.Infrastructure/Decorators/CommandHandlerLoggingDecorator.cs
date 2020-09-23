@@ -20,11 +20,12 @@ namespace iHRS.Infrastructure.Decorators
         {
             try
             {
-                _logger.LogInformation("Handling {commandName} - {@command}!", command.GetType().Name, command);
+                _logger.LogInformation("Handling command - {commandName}.", command.GetType().Name);
+                _logger.LogDebug("Handling command - {commandName}. ({@command})", command.GetType().Name, command);
 
                 var result = await _handler.Handle(command);
 
-                _logger.LogInformation("Handling {commandName} finished!", command.GetType().Name);
+                _logger.LogInformation("Handling {commandName} finished.", command.GetType().Name);
 
                 return result;
             }

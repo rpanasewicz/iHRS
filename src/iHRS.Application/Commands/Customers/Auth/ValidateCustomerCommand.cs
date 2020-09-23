@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using iHRS.Application.Common;
+﻿using iHRS.Application.Common;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
+using System.Threading.Tasks;
 
 namespace iHRS.Application.Commands.Customers.Auth
 {
@@ -30,7 +30,8 @@ namespace iHRS.Application.Commands.Customers.Auth
 
         public async Task<Unit> Handle(ValidateCustomerCommand cmd)
         {
-            var customer = await _customerRepository.GetAsync(c => c.EmailAddress == cmd.EmailAddress.ToLower().Trim());
+            var customer = await _customerRepository
+                .GetAsync(c => c.EmailAddress == cmd.EmailAddress.ToLower().Trim(), c => c.ValidationLinks, c => c.Hotel);
 
             customer.ValidateCustomer(cmd.FirstName, cmd.LastName, 30);
 

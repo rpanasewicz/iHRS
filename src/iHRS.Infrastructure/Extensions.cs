@@ -1,6 +1,8 @@
 ﻿using iHRS.Application.Auth;
 using iHRS.Application.Common;
+using iHRS.Application.DomainEvents;
 using iHRS.Application.Queries;
+using iHRS.Application.Services;
 using iHRS.Domain.Common;
 using iHRS.Domain.DomainEvents.Abstractions;
 using iHRS.Infrastructure.Auth;
@@ -32,10 +34,18 @@ namespace iHRS.Infrastructure
             services
                 .Scan(scan =>
                     scan
+                        .FromAssemblies(typeof(ReservationCreatedDomainEventHandler).Assembly)
+                        .AddClasses(c => c.AssignableTo(typeof(IDomainEventHandler<>)))
+                        .AsImplementedInterfaces()
+                        .WithScopedLifetime());
+
+            services
+                .Scan(scan =>
+                    scan
                         .FromAssemblies(typeof(ICommandHandler<,>).Assembly)
                         .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<,>)))
                         .AsImplementedInterfaces()
-                        .WithTransientLifetime());
+                        .WithScopedLifetime());
 
             services
                 .Scan(scan =>
@@ -51,11 +61,19 @@ namespace iHRS.Infrastructure
                         .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                         .AddClasses(c => c.AssignableTo(typeof(IQuery)))
                         .AsImplementedInterfaces()
-                        .WithTransientLifetime());
+                        .WithScopedLifetime());
+
+            services
+                .Scan(scan =>
+                    scan
+                        .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+                        .AddClasses(c => c.AssignableTo(typeof(IService)))
+                        .AsImplementedInterfaces()
+                        .WithScopedLifetime());
 
 
-            services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
-            services.AddSingleton<IDomainEventPublisher, DomainEventDispatcher>();
+            services.AddScoped<ICommandDispatcher, CommandDispatcher>();
+            services.AddScoped<IDomainEventPublisher, DomainEventDispatcher>();
 
             services.AddJwt();
             services.AddScoped<IAuthProvider, AuthProvider>();
@@ -70,8 +88,10 @@ namespace iHRS.Infrastructure
                     });
             });
 
+            services.AddCommandDecorator(typeof(ICommandHandler<,>), typeof(CommandHandlerDomainEventDispatcherDecorator<,>));
             services.AddCommandDecorator(typeof(ICommandHandler<,>), typeof(CommandHandlerTransactionDecorator<,>));
             services.AddCommandDecorator(typeof(ICommandHandler<,>), typeof(CommandHandlerLoggingDecorator<,>));
+            services.AddDomainEventHandlerDecorator(typeof(IDomainEventHandler<>), typeof(DomainEventLoggingDecorator<>));
 
             return services;
         }
@@ -175,6 +195,28 @@ namespace iHRS.Infrastructure
                             services,
                             ch.GetInterfaces().FirstOrDefault(il => il.GenericTypeArguments.Length == 2),
                             decoratorType.MakeGenericType(ch.GetInterfaces().FirstOrDefault(il => il.GenericTypeArguments.Length == 2)?.GenericTypeArguments ?? new Type[] { })
+                    });
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection AddDomainEventHandlerDecorator(this IServiceCollection services, Type handlerType, Type decoratorType)
+        {
+            var handlers = typeof(ReservationCreatedDomainEventHandler).Assembly
+                .GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType))
+                .ToList();
+
+            handlers.ForEach(ch =>
+            {
+                GetExtensionMethods()
+                    .FirstOrDefault(mi => !mi.IsGenericMethod && mi.Name == "TryDecorate")?
+                    .Invoke(services, new object[]
+                    {
+                        services,
+                        ch.GetInterfaces().FirstOrDefault(il => il.GenericTypeArguments.Length == 1),
+                        decoratorType.MakeGenericType(ch.GetInterfaces().FirstOrDefault(il => il.GenericTypeArguments.Length == 1)?.GenericTypeArguments ?? new Type[] { })
                     });
             });
 

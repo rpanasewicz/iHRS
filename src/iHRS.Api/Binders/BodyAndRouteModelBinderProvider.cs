@@ -7,10 +7,10 @@ namespace iHRS.Api.Binders
     public class BodyAndRouteModelBinderProvider : IModelBinderProvider
     {
         private readonly BodyModelBinderProvider _bodyModelBinderProvider;
-        private readonly ComplexTypeModelBinderProvider _complexTypeModelBinderProvider;
+        private readonly ComplexObjectModelBinderProvider _complexTypeModelBinderProvider;
 
         public BodyAndRouteModelBinderProvider(BodyModelBinderProvider bodyModelBinderProvider,
-            ComplexTypeModelBinderProvider complexTypeModelBinderProvider)
+            ComplexObjectModelBinderProvider complexTypeModelBinderProvider)
         {
             _bodyModelBinderProvider = bodyModelBinderProvider ?? throw new ArgumentNullException(nameof(bodyModelBinderProvider));
             _complexTypeModelBinderProvider = complexTypeModelBinderProvider ?? throw new ArgumentNullException(nameof(complexTypeModelBinderProvider));

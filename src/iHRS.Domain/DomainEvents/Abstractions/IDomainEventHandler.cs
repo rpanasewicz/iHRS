@@ -4,6 +4,6 @@ namespace iHRS.Domain.DomainEvents.Abstractions
 {
     public interface IDomainEventHandler<in TEvent> where TEvent : class, IDomainEvent
     {
-        Task HandleAsync(TEvent @event);
+        Task Handle(TEvent domainEvent);
     }
 }

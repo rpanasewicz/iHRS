@@ -1,12 +1,10 @@
 ﻿using iHRS.Domain.Common;
-using iHRS.Domain.DomainEvents.Abstractions;
 using iHRS.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,17 +23,15 @@ namespace iHRS.Infrastructure
         public DbSet<CommunicationMethod> CommunicationMethods { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IDomainEventPublisher _domainEventPublisher;
 
         private IDbContextTransaction _currentTransaction;
         public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
 
         public bool HasActiveTransaction => _currentTransaction != null;
 
-        public HRSContext(DbContextOptions<HRSContext> options, IHttpContextAccessor httpContextAccessor, IDomainEventPublisher domainEventPublisher) : base(options)
+        public HRSContext(DbContextOptions<HRSContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
             _httpContextAccessor = httpContextAccessor;
-            _domainEventPublisher = domainEventPublisher;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,9 +41,7 @@ namespace iHRS.Infrastructure
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            await DispatchDomainEvents();
             UpdateAuditables();
-
             return await base.SaveChangesAsync(cancellationToken);
         }
 
@@ -80,24 +74,6 @@ namespace iHRS.Infrastructure
                     entity.Entity.ModifiedOn = now;
                 }
             }
-        }
-
-        private async Task DispatchDomainEvents()
-        {
-            var domainEntities = ChangeTracker
-                .Entries<Entity>()
-                .Where(x => x.Entity.Events != null && x.Entity.Events.Any())
-                .ToList();
-
-            var domainEvents = domainEntities
-                .SelectMany(x => x.Entity.Events)
-                .ToList();
-
-            domainEntities
-                .ForEach(entity => entity.Entity.ClearEvents());
-
-            foreach (var domainEvent in domainEvents)
-                await _domainEventPublisher.PublishAsync(domainEvent);
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()

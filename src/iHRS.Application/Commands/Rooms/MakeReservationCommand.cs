@@ -1,10 +1,10 @@
 ﻿using iHRS.Application.Auth;
 using iHRS.Application.Common;
+using iHRS.Application.Exceptions;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using System;
 using System.Threading.Tasks;
-using iHRS.Application.Exceptions;
 
 namespace iHRS.Application.Commands.Rooms
 {

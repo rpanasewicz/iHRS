@@ -1,7 +1,7 @@
 @url = http://localhost:5000/hotels/{{hotelId}}/rooms
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYjdkYWZkNS04OTE0LTRlNWYtOThkNS1kZmFmYmQ0ZTI5MmQiLCJ1bmlxdWVfbmFtZSI6ImZiN2RhZmQ1LTg5MTQtNGU1Zi05OGQ1LWRmYWZiZDRlMjkyZCIsImp0aSI6IjJiYmZlY2U0LTk4YjMtNDZkOC04Yzk1LWNjMTk4MTA4MWExNSIsImlhdCI6IjE2MDA1MTkxNjUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwibmJmIjoxNjAwNTE5MTY1LCJleHAiOjE2MDA2MDkxNjUsImlzcyI6ImlIUlMifQ.GDBK8eaWuCL5h9YfcG6GZoCEOx_wiuExxOJq1wJjwj8
-@hotelId = f1e349dc-04fa-458e-bf17-0599d4e4fa69
-@roomId = 9bfc0f47-82de-447f-b37d-301147357179
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5MDNmMGI5Ny01M2QyLTQyNWQtYTM3ZC1hMjFmNDMwYzE3M2YiLCJ1bmlxdWVfbmFtZSI6IjkwM2YwYjk3LTUzZDItNDI1ZC1hMzdkLWEyMWY0MzBjMTczZiIsImp0aSI6IjM3NmZlNWIzLWQ1ODQtNDBkZS1hZWNjLTVjMDY2YjUxZGFkZCIsImlhdCI6IjE2MDA4ODAzMzIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwibmJmIjoxNjAwODgwMzMyLCJleHAiOjE2MDA5NzAzMzIsImlzcyI6ImlIUlMifQ.31Vz6HqWvelSxIQV0T6GpPjFUkbDntxwsRVORQ1YboM
+@hotelId = 98D8D799-6644-46D4-A211-71BEAE0E7B4F
+@roomId = E20E198C-CCB4-4092-94E9-053A00A1F0F8
 
 
 ###
@@ -10,7 +10,7 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {  
-    "roomNumber" : "My first room 1233!"
+    "roomNumber" : "00001"
 }
 
 ###
@@ -19,12 +19,15 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {  
-    "startDate" : "2020-12-25",
-    "endDate" : "2020-12-26",
+    "startDate" : "2020-12-27",
+    "endDate" : "2020-12-28",
     "numberOfPersons" : 2,
     "customerFirstName" : "Harry",
     "customerLastName" : "Potter",
     "customerEmailAddress" : "harry.potter@example.com",
     "customerPhoneNumber" : "+48123456789"
 }
+
+
+
 

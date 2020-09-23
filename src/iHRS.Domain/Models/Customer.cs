@@ -8,7 +8,7 @@ namespace iHRS.Domain.Models
 {
     public class Customer : Entity
     {
-        public string FirstName { get; }
+        public string FirstName { get; set; }
         public string LastName { get; }
         public string EmailAddress { get; }
         public string PhoneNumber { get; }

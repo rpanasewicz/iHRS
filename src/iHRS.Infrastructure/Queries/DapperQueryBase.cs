@@ -1,6 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace iHRS.Infrastructure.Queries
@@ -14,16 +15,10 @@ namespace iHRS.Infrastructure.Queries
             _configuration = configuration;
         }
 
-        public T Get<T>(Func<IDbConnection, T> query)
+        protected IEnumerable<T> Get<T>(string query, object param = null)
         {
             using IDbConnection db = new SqlConnection(_configuration.GetConnectionString("Default"));
-            return query.Invoke(db);
-        }
-
-        protected void Execute(Action<IDbConnection> query)
-        {
-            using IDbConnection db = new SqlConnection(_configuration.GetConnectionString("Default"));
-            query.Invoke(db);
+            return db.Query<T>(query, param);
         }
     }
 }

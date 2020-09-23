@@ -10,21 +10,20 @@ namespace iHRS.Application.DomainEvents
 {
     public class ReservationCreatedDomainEventHandler : IDomainEventHandler<ReservationCreatedDomainEvent>
     {
-        private readonly IRepository<Room> _roomRepository;
+        private readonly IRepository<Hotel> _hotelRepository;
         private readonly IMessageService _messageService;
 
-        public ReservationCreatedDomainEventHandler(IRepository<Room> roomRepository, IMessageService messageService)
+        public ReservationCreatedDomainEventHandler(IMessageService messageService, IRepository<Hotel> hotelRepository)
         {
-            _roomRepository = roomRepository;
             _messageService = messageService;
+            _hotelRepository = hotelRepository;
         }
 
-        public async Task HandleAsync(ReservationCreatedDomainEvent @event)
+        public async Task Handle(ReservationCreatedDomainEvent domainEvent)
         {
-            if (@event.Room.Hotel is null)
-                await _roomRepository.LoadProperty(@event.Room, e => e.Hotel);
+            var hotel = await _hotelRepository.GetAsync(domainEvent.Room.HotelId, h => h.MessageTemplates);
 
-            var template = @event.Room.Hotel.MessageTemplates.FirstOrDefault(t =>
+            var template = hotel.MessageTemplates.FirstOrDefault(t =>
                 t.CommunicationMethod == CommunicationMethod.Email &&
                 t.MessageType == MessageType.ReservationConfirmation);
 
@@ -33,9 +32,9 @@ namespace iHRS.Application.DomainEvents
                 return;
             }
 
-            var message = SmartFormat.Smart.Format(template.Message, @event.Reservation, @event.Room.Hotel);
+            var message = SmartFormat.Smart.Format(template.Message, domainEvent.Reservation, domainEvent.Room.Hotel);
 
-            await _messageService.SendMessage(message, new[] { @event.Reservation.Customer.EmailAddress }, "email");
+            await _messageService.SendMessage(message, new[] { domainEvent.Reservation.Customer.EmailAddress }, "email");
         }
     }
 }

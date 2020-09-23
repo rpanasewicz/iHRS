@@ -1,10 +1,22 @@
-@url = http://localhost:5000/customer
-@linkRef = secret
+@url = http://localhost:5000/customers
+@linkRef = 7PD8ZxRp6E2sNChFTPSi8Q%3d%3d
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMmNhODVkNy03YWZhLTRhMzMtOTA2OS04ZjM1OWRmMDU2NTgiLCJ1bmlxdWVfbmFtZSI6IjIyY2E4NWQ3LTdhZmEtNGEzMy05MDY5LThmMzU5ZGYwNTY1OCIsImp0aSI6Ijk3YzAxZTA3LWVmNjktNDZlMy1hYWVlLWVjMzUwMDM5MGQ4MyIsImlhdCI6IjE2MDA4ODc2OTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJjdXN0b21lciIsIm5iZiI6MTYwMDg4NzY5NCwiZXhwIjoxNjAwOTc3Njk0LCJpc3MiOiJpSFJTIn0.R6EB0BUyB9yMWZYcQiVBK8br_6TlNorMSnPN3T_gnzE
+
 ###
-POST {{url}}
+POST {{url}}/token
 Content-Type: application/json
+
 {
   "emailAddress" : "harry.potter@example.com",
   "firstName" : "Harry",
   "lastName" : "Potter"
 }
+
+###
+GET {{url}}/token?linkRef={{linkRef}}
+Content-Type: application/json
+
+###
+GET {{url}}/reservations
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}

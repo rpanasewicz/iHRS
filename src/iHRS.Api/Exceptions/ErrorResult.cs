@@ -24,6 +24,7 @@ namespace iHRS.Api.Exceptions
             {
                 AppException appException => new ErrorResult(appException.Message, appException.Code, appException.StatusCode),
                 DomainException domainException => new ErrorResult(domainException.Message, domainException.Code, domainException.StatusCode),
+                UnauthorizedAccessException _ => new ErrorResult("Request sent by the client could not be authenticated.", "unauthorized", HttpStatusCode.Unauthorized),
                 _ => new ErrorResult(ex.Message, "no_code", HttpStatusCode.InternalServerError)
             };
         }

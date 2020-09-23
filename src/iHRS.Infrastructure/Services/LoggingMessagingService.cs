@@ -6,9 +6,9 @@ namespace iHRS.Infrastructure.Services
 {
     internal class LoggingMessagingService : IMessageService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<LoggingMessagingService> _logger;
 
-        public LoggingMessagingService(ILogger logger)
+        public LoggingMessagingService(ILogger<LoggingMessagingService> logger)
         {
             _logger = logger;
         }
