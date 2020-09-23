@@ -8,6 +8,10 @@ namespace iHRS.Infrastructure.EntityConfigurations
     {
         public override void ConfigureFields(EntityTypeBuilder<Room> entity)
         {
+            entity.Property(e => e.RoomNumber)
+                .HasColumnType("nvarchar(10)")
+                .HasMaxLength(10)
+                .IsRequired();
         }
 
         public override void ConfigureRelationships(EntityTypeBuilder<Room> entity)

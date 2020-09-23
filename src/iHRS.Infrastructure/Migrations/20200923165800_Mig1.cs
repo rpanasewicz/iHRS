@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace iHRS.Infrastructure.Migrations
 {
-    public partial class Mig2 : Migration
+    public partial class Mig1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,7 +24,7 @@ namespace iHRS.Infrastructure.Migrations
                 columns: table => new
                 {
                     HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -65,11 +65,11 @@ namespace iHRS.Infrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -86,6 +86,10 @@ namespace iHRS.Infrastructure.Migrations
                 columns: table => new
                 {
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
@@ -104,11 +108,36 @@ namespace iHRS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MessageTemplates",
+                columns: table => new
+                {
+                    MessageTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MessageTypeId = table.Column<int>(type: "int", nullable: false),
+                    CommunicationMethodId = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageTemplates", x => x.MessageTemplateId);
+                    table.ForeignKey(
+                        name: "FK_MessageTemplates_Hotels_HotelId",
+                        column: x => x.HotelId,
+                        principalTable: "Hotels",
+                        principalColumn: "HotelId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rooms",
                 columns: table => new
                 {
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoomNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoomNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
@@ -127,49 +156,11 @@ namespace iHRS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MessageTemplates",
-                columns: table => new
-                {
-                    MessageTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MessageTypeId = table.Column<int>(type: "int", nullable: false),
-                    CommunicationMethodId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MessageTemplates", x => x.MessageTemplateId);
-                    table.ForeignKey(
-                        name: "FK_MessageTemplates_CommunicationMethods_CommunicationMethodId",
-                        column: x => x.CommunicationMethodId,
-                        principalTable: "CommunicationMethods",
-                        principalColumn: "CommunicationMethodId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MessageTemplates_Hotels_HotelId",
-                        column: x => x.HotelId,
-                        principalTable: "Hotels",
-                        principalColumn: "HotelId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MessageTemplates_MessageTypes_MessageTypeId",
-                        column: x => x.MessageTypeId,
-                        principalTable: "MessageTypes",
-                        principalColumn: "MessageTypeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ValidationLinks",
                 columns: table => new
                 {
                     ValidationLinkId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -180,11 +171,10 @@ namespace iHRS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ValidationLinks", x => x.ValidationLinkId);
                     table.ForeignKey(
-                        name: "FK_ValidationLinks_Customers_CustomerId1",
-                        column: x => x.CustomerId1,
+                        name: "FK_ValidationLinks_Customers_CustomerId",
+                        column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "CustomerId");
                 });
 
             migrationBuilder.CreateTable(
@@ -211,14 +201,7 @@ namespace iHRS.Infrastructure.Migrations
                         name: "FK_Reservations_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reservations_ReservationStatuses_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "ReservationStatuses",
-                        principalColumn: "ReservationStatusId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CustomerId");
                     table.ForeignKey(
                         name: "FK_Reservations_Rooms_RoomId",
                         column: x => x.RoomId,
@@ -232,19 +215,9 @@ namespace iHRS.Infrastructure.Migrations
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageTemplates_CommunicationMethodId",
-                table: "MessageTemplates",
-                column: "CommunicationMethodId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MessageTemplates_HotelId",
                 table: "MessageTemplates",
                 column: "HotelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MessageTemplates_MessageTypeId",
-                table: "MessageTemplates",
-                column: "MessageTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CustomerId",
@@ -257,43 +230,38 @@ namespace iHRS.Infrastructure.Migrations
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_StatusId",
-                table: "Reservations",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Rooms_HotelId",
                 table: "Rooms",
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ValidationLinks_CustomerId1",
+                name: "IX_ValidationLinks_CustomerId",
                 table: "ValidationLinks",
-                column: "CustomerId1");
+                column: "CustomerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CommunicationMethods");
+
+            migrationBuilder.DropTable(
                 name: "MessageTemplates");
 
             migrationBuilder.DropTable(
+                name: "MessageTypes");
+
+            migrationBuilder.DropTable(
                 name: "Reservations");
+
+            migrationBuilder.DropTable(
+                name: "ReservationStatuses");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "ValidationLinks");
-
-            migrationBuilder.DropTable(
-                name: "CommunicationMethods");
-
-            migrationBuilder.DropTable(
-                name: "MessageTypes");
-
-            migrationBuilder.DropTable(
-                name: "ReservationStatuses");
 
             migrationBuilder.DropTable(
                 name: "Rooms");

@@ -10,8 +10,8 @@ using iHRS.Infrastructure;
 namespace iHRS.Infrastructure.Migrations
 {
     [DbContext(typeof(HRSContext))]
-    [Migration("20200922193304_Mig2")]
-    partial class Mig2
+    [Migration("20200923165800_Mig1")]
+    partial class Mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -53,12 +53,27 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("CreatedOn");
 
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<DateTime?>("ExpirationDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("ExpirationDate");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<Guid>("HotelId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
@@ -69,6 +84,11 @@ namespace iHRS.Infrastructure.Migrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2")
                         .HasColumnName("ModifiedOn");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.HasKey("Id");
 
@@ -108,7 +128,9 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnName("ModifiedOn");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -142,6 +164,7 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MessageTypeId")
@@ -159,11 +182,7 @@ namespace iHRS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommunicationMethodId");
-
                     b.HasIndex("HotelId");
-
-                    b.HasIndex("MessageTypeId");
 
                     b.ToTable("MessageTemplates");
                 });
@@ -238,8 +257,6 @@ namespace iHRS.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("Reservations");
                 });
 
@@ -293,7 +310,9 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnName("ModifiedOn");
 
                     b.Property<string>("RoomNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
@@ -319,20 +338,26 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnName("CreatedOn");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2(7)");
 
                     b.Property<string>("EmailAddress")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<DateTime?>("ExpirationDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("ExpirationDate");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
@@ -345,7 +370,9 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnName("ModifiedOn");
 
                     b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -368,7 +395,7 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("CreatedOn");
 
-                    b.Property<Guid?>("CustomerId1")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ExpirationDate")
@@ -387,7 +414,7 @@ namespace iHRS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("ValidationLinks");
                 });
@@ -405,29 +432,13 @@ namespace iHRS.Infrastructure.Migrations
 
             modelBuilder.Entity("iHRS.Domain.Models.MessageTemplate", b =>
                 {
-                    b.HasOne("iHRS.Domain.Models.CommunicationMethod", "CommunicationMethod")
-                        .WithMany()
-                        .HasForeignKey("CommunicationMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("iHRS.Domain.Models.Hotel", "Hotel")
                         .WithMany("MessageTemplates")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("iHRS.Domain.Models.MessageType", "MessageType")
-                        .WithMany()
-                        .HasForeignKey("MessageTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CommunicationMethod");
 
                     b.Navigation("Hotel");
-
-                    b.Navigation("MessageType");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Reservation", b =>
@@ -435,7 +446,7 @@ namespace iHRS.Infrastructure.Migrations
                     b.HasOne("iHRS.Domain.Models.Customer", "Customer")
                         .WithMany("Reservations")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("iHRS.Domain.Models.Room", "Room")
@@ -444,17 +455,9 @@ namespace iHRS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("iHRS.Domain.Models.ReservationStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
 
                     b.Navigation("Room");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Room", b =>
@@ -470,9 +473,13 @@ namespace iHRS.Infrastructure.Migrations
 
             modelBuilder.Entity("iHRS.Domain.Models.ValidationLink", b =>
                 {
-                    b.HasOne("iHRS.Domain.Models.Customer", null)
+                    b.HasOne("iHRS.Domain.Models.Customer", "Customer")
                         .WithMany("ValidationLinks")
-                        .HasForeignKey("CustomerId1");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Customer", b =>

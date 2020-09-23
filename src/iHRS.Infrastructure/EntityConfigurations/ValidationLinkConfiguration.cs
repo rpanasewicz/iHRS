@@ -1,4 +1,5 @@
 ﻿using iHRS.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace iHRS.Infrastructure.EntityConfigurations
@@ -14,6 +15,10 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
         public override void ConfigureRelationships(EntityTypeBuilder<ValidationLink> entity)
         {
+            entity.HasOne(r => r.Customer)
+                .WithMany(h => h.ValidationLinks)
+                .HasForeignKey(r => r.CustomerId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

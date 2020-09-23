@@ -8,10 +8,22 @@ namespace iHRS.Infrastructure.EntityConfigurations
     {
         public override void ConfigureFields(EntityTypeBuilder<Reservation> entity)
         {
-            entity.Property(r => r.StartDate).HasColumnType("datetime2(7)");
-            entity.Property(r => r.EndDate).HasColumnType("datetime2(7)");
-
             entity.Ignore(e => e.Status);
+
+            entity
+                .Property(r => r.StartDate)
+                .HasColumnType("datetime2(7)")
+                .IsRequired();
+
+            entity
+                .Property(r => r.EndDate)
+                .HasColumnType("datetime2(7)")
+                .IsRequired();
+
+            entity
+                .Property(e => e.NumberOfPersons)
+                .HasColumnType("int")
+                .IsRequired();
         }
 
         public override void ConfigureRelationships(EntityTypeBuilder<Reservation> entity)
@@ -19,6 +31,11 @@ namespace iHRS.Infrastructure.EntityConfigurations
             entity.HasOne(r => r.Room)
                 .WithMany(h => h.Reservations)
                 .HasForeignKey(r => r.RoomId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            entity.HasOne(r => r.Customer)
+                .WithMany(h => h.Reservations)
+                .HasForeignKey(r => r.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
 
