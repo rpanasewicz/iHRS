@@ -10,6 +10,8 @@ namespace iHRS.Infrastructure.EntityConfigurations
         {
             entity.Property(r => r.StartDate).HasColumnType("datetime2(7)");
             entity.Property(r => r.EndDate).HasColumnType("datetime2(7)");
+
+            entity.Ignore(e => e.Status);
         }
 
         public override void ConfigureRelationships(EntityTypeBuilder<Reservation> entity)

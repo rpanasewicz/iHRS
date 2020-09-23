@@ -43,6 +43,8 @@ namespace iHRS.Domain.Models
 
         public Reservation CreateReservation(DateTime fromDate, DateTime toDate, int numberOfPersons, Customer customer)
         {
+            if (customer == null) throw new ArgumentNullException(nameof(customer));
+
             if (_reservations is null) throw new PropertyNotInitializedException(nameof(Reservations));
 
             if (_reservations.Any(r => r.StartDate < toDate && r.EndDate > fromDate))

@@ -52,14 +52,22 @@ namespace iHRS.Application.Commands.Rooms
         public async Task<Guid> Handle(MakeReservationCommand cmd)
         {
             var room = await _roomRepository.GetAsync(cmd.RoomId, r => r.Reservations, r => r.Hotel);
+            if (room is null) throw new NotFoundException(nameof(Room), cmd.RoomId);
 
-            if(room is null) throw new NotFoundException(nameof(Room), cmd.RoomId);
+            Customer customer;
 
-            var customer = _auth.CustomerId == default
-                ? await _customerRepository.GetAsync(_auth.CustomerId)
-                : Customer.CreateNew(cmd.CustomerFirstName, cmd.CustomerLastName, cmd.CustomerEmailAddress, cmd.CustomerPhoneNumber, room.Hotel);
+            if (_auth.CustomerId != Guid.Empty)
+            {
+                customer = await _customerRepository.GetAsync(_auth.CustomerId);
 
-            await _customerRepository.AddAsync(customer);
+                if (customer is null)
+                    throw new NotFoundException(nameof(Customer), _auth.CustomerId);
+            }
+            else
+            {
+                customer = Customer.CreateNew(cmd.CustomerFirstName, cmd.CustomerLastName, cmd.CustomerEmailAddress, cmd.CustomerPhoneNumber, room.Hotel);
+                await _customerRepository.AddAsync(customer);
+            }
 
             var reservation = room.CreateReservation(cmd.StartDate, cmd.EndDate, cmd.NumberOfPersons, customer);
 
