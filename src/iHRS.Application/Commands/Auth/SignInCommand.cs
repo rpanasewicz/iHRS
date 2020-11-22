@@ -68,7 +68,7 @@ namespace iHRS.Application.Commands.Auth
             {
                 ["tenantId"] = new string[] { user.TenantId.ToString() },
                 ["firstName"] = new string[] { user.FirstName },
-                ["lsatName"] = new string[] { user.LastName },
+                ["lastName"] = new string[] { user.LastName },
             };
 
             var token = _jwtHandler.CreateToken(user.Id.ToString(), user.Role.Name, claims: claims);
