@@ -26,29 +26,10 @@ namespace iHRS.Api.Controllers
 
         }
 
-        [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUp(SigUpModel md)
-        {
-            var cmd = new SignUpCommand(md.FirstName, md.LastName, md.Email, md.Password, md.DateOfBirth);
-            await _commandDispatcher.SendAsync(cmd);
-            return Ok();
-
-        }
-
         public class SigInModel
         {
             public string EmailAddress { get; set; }
             public string Password { get; set; }
-        }
-
-
-        public class SigUpModel
-        {
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Email { get; set; }
-            public string Password { get; set; }
-            public DateTime DateOfBirth { get; set; }
         }
     }
 }
