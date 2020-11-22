@@ -1,11 +1,16 @@
 ﻿using iHRS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class RoomConfiguration : BaseEntityConfiguration<Room>
     {
+        public RoomConfiguration(Guid tenantId) : base(tenantId)
+        {
+        }
+
         public override void ConfigureFields(EntityTypeBuilder<Room> entity)
         {
             entity.Property(e => e.RoomNumber)

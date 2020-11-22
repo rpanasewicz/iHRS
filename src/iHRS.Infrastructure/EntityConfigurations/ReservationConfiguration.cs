@@ -1,11 +1,16 @@
 ﻿using iHRS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class ReservationConfiguration : BaseEntityConfiguration<Reservation>
     {
+        public ReservationConfiguration(Guid tenantId) : base(tenantId)
+        {
+        }
+
         public override void ConfigureFields(EntityTypeBuilder<Reservation> entity)
         {
             entity.Ignore(e => e.Status);

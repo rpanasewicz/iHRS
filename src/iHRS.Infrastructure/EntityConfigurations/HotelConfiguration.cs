@@ -1,11 +1,16 @@
 ﻿using iHRS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class HotelConfiguration : BaseEntityConfiguration<Hotel>
     {
+        public HotelConfiguration(Guid tenantId) : base(tenantId)
+        {
+        }
+
         public override void ConfigureFields(EntityTypeBuilder<Hotel> entity)
         {
             entity.Property(e => e.Name)

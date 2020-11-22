@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using iHRS.Application.Auth;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System;
 
 namespace iHRS.Infrastructure
 {
@@ -12,16 +14,14 @@ namespace iHRS.Infrastructure
             optionsBuilder.UseSqlServer(
                 "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=NOT_EXISTING_DATABASE;Integrated Security=True;");
 
-            return new HRSContext(optionsBuilder.Options, new NullHttpContextAccessor());
+            return new HRSContext(optionsBuilder.Options, new EmptyAuthProvider());
         }
 
-        private class NullHttpContextAccessor : IHttpContextAccessor
+        private class EmptyAuthProvider : IAuthProvider
         {
-            public HttpContext HttpContext
-            {
-                get => null;
-                set { }
-            }
+            public Guid UserId => Guid.Empty;
+            public Guid CustomerId => Guid.Empty;
+            public Guid TenantId => Guid.Empty;
         }
     }
 }

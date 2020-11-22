@@ -100,46 +100,8 @@ namespace iHRS.Infrastructure
         {
             return MigrateDbContext<HRSContext>(webHost, (context, provider) =>
             {
-                context.SeedEnumerations();
-                context.SaveChanges();
             });
-        }
-
-        private static void SeedEnumerations(this HRSContext context, Assembly assembly = null)
-        {
-            assembly ??= typeof(Enumeration).Assembly;
-
-            assembly
-                .GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(Enumeration)) && t.IsClass && !t.IsAbstract)
-                .ToList()
-                .ForEach(t =>
-                {
-                    var enumValues = typeof(Enumeration)
-                        .GetMethod("GetAll")?
-                        .MakeGenericMethod(t)
-                        .Invoke(null, null);
-
-                    var set = context
-                        .GetType()
-                        .GetMethods()
-                        .FirstOrDefault(m => m.Name == "Set" && m.GetParameters().Length == 0)?
-                        .MakeGenericMethod(t)
-                        .Invoke(context, null) as IListSource;
-
-                    var findResult = set?
-                        .GetType()?
-                        .GetMethod("Find")?
-                        .Invoke(set, new object[] { new object[] { 1 } });
-
-                    if (findResult is null)
-                        set?
-                        .GetType()
-                        .GetMethods()
-                        .FirstOrDefault(m => m.Name == "AddRange" && m.GetParameters().First().ParameterType.Name.StartsWith("IEnumerable"))?
-                        .Invoke(set, new[] { enumValues });
-                });
-        }
+        }    
 
         internal static IWebHost MigrateDbContext<TContext>(this IWebHost webHost, Action<TContext, IServiceProvider> seeder) where TContext : DbContext
         {
@@ -234,6 +196,23 @@ namespace iHRS.Infrastructure
                         where method.GetParameters()[0].ParameterType == typeof(IServiceCollection)
                         select method;
             return query;
+        }
+
+        public static void ForceSetValue(this PropertyInfo propertyInfo, object obj, object value)
+        {
+            var backingFieldInfo = obj.GetType().GetField($"<{propertyInfo.Name}>k__BackingField",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (backingFieldInfo != null)
+            {
+                backingFieldInfo.SetValue(obj, value);
+            }
+            else
+            {
+                backingFieldInfo = obj.GetType().BaseType?.GetField($"<{propertyInfo.Name}>k__BackingField",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+                backingFieldInfo.SetValue(obj, value);
+            }
         }
     }
 

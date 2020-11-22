@@ -1,5 +1,7 @@
-﻿using iHRS.Domain.Common;
+﻿using iHRS.Application.Auth;
+using iHRS.Domain.Common;
 using iHRS.Domain.Models;
+using iHRS.Infrastructure.EntityConfigurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -21,22 +23,36 @@ namespace iHRS.Infrastructure
         public DbSet<MessageTemplate> MessageTemplate { get; set; }
         public DbSet<MessageType> MessageTemplateType { get; set; }
         public DbSet<CommunicationMethod> CommunicationMethods { get; set; }
+        public DbSet<Tenant> Tenants { get; set; }
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
+        private readonly IAuthProvider _authProvider;
         private IDbContextTransaction _currentTransaction;
         public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
 
         public bool HasActiveTransaction => _currentTransaction != null;
 
-        public HRSContext(DbContextOptions<HRSContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
+        public HRSContext(DbContextOptions<HRSContext> options, IAuthProvider authProvider) : base(options)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _authProvider = authProvider;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(HRSContext).Assembly);
+            var tenantId = _authProvider.TenantId;
+
+            modelBuilder.ApplyConfiguration(new TenantTypeConfiguration());
+
+            modelBuilder.ApplyConfiguration(new MessageTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CommunicationMethodConfiguration());
+            modelBuilder.ApplyConfiguration(new ReservationStatusConfiguration());
+
+            modelBuilder.ApplyConfiguration(new CustomerConfiguration(tenantId));
+            modelBuilder.ApplyConfiguration(new HotelConfiguration(tenantId));
+            modelBuilder.ApplyConfiguration(new MessageTemplateConfiguration(tenantId));
+            modelBuilder.ApplyConfiguration(new ReservationConfiguration(tenantId));
+            modelBuilder.ApplyConfiguration(new RoomConfiguration(tenantId));
+            modelBuilder.ApplyConfiguration(new UserConfiguration(tenantId));
+            modelBuilder.ApplyConfiguration(new ValidationLinkConfiguration(tenantId));            
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -48,7 +64,8 @@ namespace iHRS.Infrastructure
         private void UpdateAuditables()
         {
             var auditables = ChangeTracker.Entries<Entity>();
-            var user = _httpContextAccessor?.HttpContext?.User?.Identity?.Name?.Replace("-", "") ?? "SYSTEM";
+            var userId = _authProvider.UserId != default ? _authProvider.UserId.ToString() : "SYSTEM";
+            var tenantId = _authProvider.TenantId;
 
             var now = DateTime.UtcNow;
 
@@ -62,15 +79,16 @@ namespace iHRS.Infrastructure
 
                 if (entity.State == EntityState.Added)
                 {
-                    entity.Entity.CreatedBy = user;
+                    entity.Entity.CreatedBy = userId;
                     entity.Entity.CreatedOn = now;
-                    entity.Entity.ModifiedBy = user;
+                    entity.Entity.ModifiedBy = userId;
                     entity.Entity.ModifiedOn = now;
+                    entity.Entity.TenantId = tenantId;
                 }
 
                 if (entity.State == EntityState.Modified)
                 {
-                    entity.Entity.ModifiedBy = user;
+                    entity.Entity.ModifiedBy = userId;
                     entity.Entity.ModifiedOn = now;
                 }
             }

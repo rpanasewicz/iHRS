@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace iHRS.Infrastructure.Migrations
 {
@@ -17,23 +17,6 @@ namespace iHRS.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CommunicationMethods", x => x.CommunicationMethodId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Hotels",
-                columns: table => new
-                {
-                    HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hotels", x => x.HotelId);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,6 +44,41 @@ namespace iHRS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tenants",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tenants", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Hotels",
+                columns: table => new
+                {
+                    HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hotels", x => x.HotelId);
+                    table.ForeignKey(
+                        name: "FK_Hotels_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -70,6 +88,7 @@ namespace iHRS.Infrastructure.Migrations
                     EmailAddress = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -79,6 +98,12 @@ namespace iHRS.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Users_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,6 +116,7 @@ namespace iHRS.Infrastructure.Migrations
                     EmailAddress = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -105,6 +131,12 @@ namespace iHRS.Infrastructure.Migrations
                         column: x => x.HotelId,
                         principalTable: "Hotels",
                         principalColumn: "HotelId");
+                    table.ForeignKey(
+                        name: "FK_Customers_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,6 +148,7 @@ namespace iHRS.Infrastructure.Migrations
                     HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MessageTypeId = table.Column<int>(type: "int", nullable: false),
                     CommunicationMethodId = table.Column<int>(type: "int", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -130,6 +163,12 @@ namespace iHRS.Infrastructure.Migrations
                         column: x => x.HotelId,
                         principalTable: "Hotels",
                         principalColumn: "HotelId");
+                    table.ForeignKey(
+                        name: "FK_MessageTemplates_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,6 +178,7 @@ namespace iHRS.Infrastructure.Migrations
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -153,6 +193,12 @@ namespace iHRS.Infrastructure.Migrations
                         column: x => x.HotelId,
                         principalTable: "Hotels",
                         principalColumn: "HotelId");
+                    table.ForeignKey(
+                        name: "FK_Rooms_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,6 +207,7 @@ namespace iHRS.Infrastructure.Migrations
                 {
                     ValidationLinkId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -175,6 +222,12 @@ namespace iHRS.Infrastructure.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "CustomerId");
+                    table.ForeignKey(
+                        name: "FK_ValidationLinks_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,6 +241,7 @@ namespace iHRS.Infrastructure.Migrations
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -207,7 +261,50 @@ namespace iHRS.Infrastructure.Migrations
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "RoomId");
+                    table.ForeignKey(
+                        name: "FK_Reservations_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "CommunicationMethods",
+                columns: new[] { "CommunicationMethodId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Email" },
+                    { 2, "Sms" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "MessageTypes",
+                columns: new[] { "MessageTypeId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "ReservationConfirmation" },
+                    { 2, "CustomerLogin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ReservationStatuses",
+                columns: new[] { "ReservationStatusId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "New" },
+                    { 2, "Confirmed" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tenants",
+                column: "Id",
+                value: new Guid("00000000-0000-0000-0000-000000000001"));
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserId", "CreatedBy", "CreatedOn", "DateOfBirth", "EmailAddress", "ExpirationDate", "FirstName", "LastName", "ModifiedBy", "ModifiedOn", "Password", "TenantId" },
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000002"), "System", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1995, 4, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "user@example.com", null, "Adam", "Nowak", "System", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "AQAAAAEAACcQAAAAENU6ixP+jXYINKxOpVeXbTl0X9q83k4cUIXSMPv0iQZro7F2xMN7t7otCg1O3IueJQ==", new Guid("00000000-0000-0000-0000-000000000001") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_HotelId",
@@ -215,9 +312,24 @@ namespace iHRS.Infrastructure.Migrations
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Customers_TenantId",
+                table: "Customers",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Hotels_TenantId",
+                table: "Hotels",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MessageTemplates_HotelId",
                 table: "MessageTemplates",
                 column: "HotelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageTemplates_TenantId",
+                table: "MessageTemplates",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CustomerId",
@@ -230,14 +342,34 @@ namespace iHRS.Infrastructure.Migrations
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reservations_TenantId",
+                table: "Reservations",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rooms_HotelId",
                 table: "Rooms",
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Rooms_TenantId",
+                table: "Rooms",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_TenantId",
+                table: "Users",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ValidationLinks_CustomerId",
                 table: "ValidationLinks",
                 column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ValidationLinks_TenantId",
+                table: "ValidationLinks",
+                column: "TenantId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -271,6 +403,9 @@ namespace iHRS.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Hotels");
+
+            migrationBuilder.DropTable(
+                name: "Tenants");
         }
     }
 }

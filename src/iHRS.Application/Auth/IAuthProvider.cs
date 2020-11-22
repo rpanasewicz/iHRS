@@ -6,5 +6,6 @@ namespace iHRS.Application.Auth
     {
         Guid UserId { get; }
         Guid CustomerId { get; }
+        Guid TenantId { get; }
     }
 }

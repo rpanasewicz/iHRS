@@ -1,11 +1,16 @@
 ﻿using iHRS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class ValidationLinkConfiguration : BaseEntityConfiguration<ValidationLink>
     {
+        public ValidationLinkConfiguration(Guid tenantId) : base(tenantId)
+        {
+        }
+
         public override string TableName => "ValidationLinks";
         public override string PrimaryKeyColumnName => "ValidationLinkId";
 

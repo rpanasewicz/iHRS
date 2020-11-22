@@ -17,7 +17,7 @@ namespace iHRS.Infrastructure.Migrations
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.0-rc.1.20451.13");
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("iHRS.Domain.Models.CommunicationMethod", b =>
                 {
@@ -33,6 +33,18 @@ namespace iHRS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CommunicationMethods");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Email"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Sms"
+                        });
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Customer", b =>
@@ -88,9 +100,14 @@ namespace iHRS.Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Customers");
                 });
@@ -130,7 +147,12 @@ namespace iHRS.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Hotels");
                 });
@@ -178,9 +200,14 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("ModifiedOn");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("MessageTemplates");
                 });
@@ -199,6 +226,18 @@ namespace iHRS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MessageTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "ReservationConfirmation"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "CustomerLogin"
+                        });
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Reservation", b =>
@@ -249,11 +288,16 @@ namespace iHRS.Infrastructure.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Reservations");
                 });
@@ -272,6 +316,18 @@ namespace iHRS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ReservationStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "New"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Confirmed"
+                        });
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Room", b =>
@@ -312,11 +368,33 @@ namespace iHRS.Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("iHRS.Domain.Models.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001")
+                        });
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.User", b =>
@@ -372,9 +450,30 @@ namespace iHRS.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            CreatedBy = "System",
+                            CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1995, 4, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmailAddress = "user@example.com",
+                            FirstName = "Adam",
+                            LastName = "Nowak",
+                            ModifiedBy = "System",
+                            ModifiedOn = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Password = "AQAAAAEAACcQAAAAENU6ixP+jXYINKxOpVeXbTl0X9q83k4cUIXSMPv0iQZro7F2xMN7t7otCg1O3IueJQ==",
+                            TenantId = new Guid("00000000-0000-0000-0000-000000000001")
+                        });
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.ValidationLink", b =>
@@ -410,9 +509,14 @@ namespace iHRS.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("ModifiedOn");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("ValidationLinks");
                 });
@@ -425,7 +529,26 @@ namespace iHRS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("iHRS.Domain.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Hotel");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("iHRS.Domain.Models.Hotel", b =>
+                {
+                    b.HasOne("iHRS.Domain.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.MessageTemplate", b =>
@@ -436,7 +559,15 @@ namespace iHRS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("iHRS.Domain.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Hotel");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Reservation", b =>
@@ -453,9 +584,17 @@ namespace iHRS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("iHRS.Domain.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Customer");
 
                     b.Navigation("Room");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Room", b =>
@@ -466,7 +605,26 @@ namespace iHRS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("iHRS.Domain.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Hotel");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("iHRS.Domain.Models.User", b =>
+                {
+                    b.HasOne("iHRS.Domain.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.ValidationLink", b =>
@@ -477,7 +635,15 @@ namespace iHRS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("iHRS.Domain.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("iHRS.Domain.Models.Customer", b =>

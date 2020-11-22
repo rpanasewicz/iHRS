@@ -4,6 +4,7 @@ using iHRS.Application.Exceptions;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -63,16 +64,12 @@ namespace iHRS.Application.Commands.Auth
                 throw new InvalidCredentialsException();
             }
 
-            //var claims = user.Permissions.Any()
-            //    ? new Dictionary<string, IEnumerable<string>>
-            //    {
-            //        ["permissions"] = user.Permissions
-            //    }
-            //    : null;
+            var claims = new Dictionary<string, IEnumerable<string>>
+            {
+                ["tenantId"] = new string[] { user.TenantId.ToString() }
+            };
 
-            //var auth = _jwtProvider.CreateNew(user.Id, user.Role, claims: claims);
-
-            var token = _jwtHandler.CreateToken(user.Id.ToString(), "user");
+            var token = _jwtHandler.CreateToken(user.Id.ToString(), "user", claims: claims);
 
             _logger.LogInformation($"User with id: {user.Id} has been authenticated.");
 

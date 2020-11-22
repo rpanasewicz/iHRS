@@ -1,4 +1,5 @@
 ﻿using iHRS.Domain.DomainEvents.Abstractions;
+using iHRS.Domain.Models;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,9 @@ namespace iHRS.Domain.Common
     public class Entity
     {
         public Guid Id { get; protected set; }
+
+        public Guid TenantId { get; set; }
+        public Tenant Tenant { get; set; }
 
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }

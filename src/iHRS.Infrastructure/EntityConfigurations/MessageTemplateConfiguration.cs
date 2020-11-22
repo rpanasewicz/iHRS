@@ -1,11 +1,16 @@
 ﻿using iHRS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class MessageTemplateConfiguration : BaseEntityConfiguration<MessageTemplate>
     {
+        public MessageTemplateConfiguration(Guid tenantId) : base(tenantId)
+        {
+        }
+
         public override void ConfigureFields(EntityTypeBuilder<MessageTemplate> entity)
         {
             entity.Ignore(e => e.MessageType);

@@ -1,11 +1,16 @@
 ﻿using iHRS.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class CustomerConfiguration : BaseEntityConfiguration<Customer>
     {
+        public CustomerConfiguration(Guid tenantId) : base(tenantId)
+        {
+        }
+
         public override void ConfigureFields(EntityTypeBuilder<Customer> entity)
         {
             entity.Property(c => c.FirstName)

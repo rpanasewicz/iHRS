@@ -1,6 +1,7 @@
 ﻿using iHRS.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Collections.Generic;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
@@ -23,6 +24,13 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 .HasColumnType("nvarchar(128)")
                 .IsRequired()
                 .ValueGeneratedNever();
+
+            var enumValues = typeof(Enumeration)
+                .GetMethod("GetAll")?
+                .MakeGenericMethod(typeof(T))
+                .Invoke(null, null) as IEnumerable<T>;
+
+            entity.HasData(enumValues);
         }
     }
 }
