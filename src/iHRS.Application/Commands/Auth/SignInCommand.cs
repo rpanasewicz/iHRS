@@ -66,7 +66,9 @@ namespace iHRS.Application.Commands.Auth
 
             var claims = new Dictionary<string, IEnumerable<string>>
             {
-                ["tenantId"] = new string[] { user.TenantId.ToString() }
+                ["tenantId"] = new string[] { user.TenantId.ToString() },
+                ["firstName"] = new string[] { user.FirstName },
+                ["lsatName"] = new string[] { user.LastName },
             };
 
             var token = _jwtHandler.CreateToken(user.Id.ToString(), user.Role.Name, claims: claims);

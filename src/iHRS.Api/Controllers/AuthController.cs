@@ -23,7 +23,6 @@ namespace iHRS.Api.Controllers
             var cmd = new SignInCommand(md.EmailAddress, md.Password);
             var result = await _commandDispatcher.SendAsync(cmd);
             return Ok(result);
-
         }
 
         public class SigInModel
