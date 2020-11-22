@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
@@ -31,5 +32,6 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
         public override string TableName => "MessageTemplates";
         public override string PrimaryKeyColumnName => "MessageTemplateId";
+        public override IEnumerable<MessageTemplate> SeedData => null;
     }
 }

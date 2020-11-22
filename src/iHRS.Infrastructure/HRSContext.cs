@@ -24,6 +24,7 @@ namespace iHRS.Infrastructure
         public DbSet<MessageType> MessageTemplateType { get; set; }
         public DbSet<CommunicationMethod> CommunicationMethods { get; set; }
         public DbSet<Tenant> Tenants { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         private readonly IAuthProvider _authProvider;
         private IDbContextTransaction _currentTransaction;
@@ -45,6 +46,7 @@ namespace iHRS.Infrastructure
             modelBuilder.ApplyConfiguration(new MessageTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CommunicationMethodConfiguration());
             modelBuilder.ApplyConfiguration(new ReservationStatusConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleTypeConfiguration());
 
             modelBuilder.ApplyConfiguration(new CustomerConfiguration(tenantId));
             modelBuilder.ApplyConfiguration(new HotelConfiguration(tenantId));

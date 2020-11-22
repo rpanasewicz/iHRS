@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
@@ -13,6 +14,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
         public override string TableName => "ValidationLinks";
         public override string PrimaryKeyColumnName => "ValidationLinkId";
+        public override IEnumerable<ValidationLink> SeedData => null;
 
         public override void ConfigureFields(EntityTypeBuilder<ValidationLink> entity)
         {

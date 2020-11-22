@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
@@ -11,6 +14,8 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
         public abstract void ConfigureFields(EntityTypeBuilder<T> entity);
         public abstract void ConfigureRelationships(EntityTypeBuilder<T> entity);
+
+        public abstract IEnumerable<T> SeedData { get; }
         public abstract string TableName { get; }
         public abstract string PrimaryKeyColumnName { get; }
 
@@ -61,7 +66,9 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
             entity.HasOne(e => e.Tenant)
                 .WithMany()
-                .HasForeignKey(e => e.TenantId);                
+                .HasForeignKey(e => e.TenantId);
+
+            if(SeedData?.Any() == true) entity.HasData(SeedData);
 
             ConfigureFields(entity);
             ConfigureRelationships(entity);

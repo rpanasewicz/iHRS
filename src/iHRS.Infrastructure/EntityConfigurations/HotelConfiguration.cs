@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
@@ -25,5 +26,6 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
         public override string TableName => "Hotels";
         public override string PrimaryKeyColumnName => "HotelId";
+        public override IEnumerable<Hotel> SeedData => null;
     }
 }

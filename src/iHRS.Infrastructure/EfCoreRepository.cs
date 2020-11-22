@@ -54,6 +54,13 @@ namespace iHRS.Infrastructure
                 .SingleOrDefaultAsync(filterExpression);
         }
 
+        public async Task<T> FindFromAllAsync(Expression<Func<T, bool>> filterExpression)
+        {
+            return await _context.Set<T>()
+                .IgnoreQueryFilters()
+                .SingleOrDefaultAsync(filterExpression);
+        }
+
         public async Task<T> GetAsync<TProperty1>(Expression<Func<T, bool>> filterExpression, Expression<Func<T, TProperty1>> includeExpression1)
         {
             return await _context.Set<T>()

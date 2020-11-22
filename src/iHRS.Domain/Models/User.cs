@@ -11,9 +11,16 @@ namespace iHRS.Domain.Models
         public string Password { get; private set; }
         public DateTime DateOfBirth { get; private set; }
 
+        public int RoleId { get; private set; }
+        public Role Role
+        {
+            get => Enumeration.FromValue<Role>(RoleId);
+            private set => RoleId = value.Id;
+        }
+
         private User() { } // For EF
 
-        private User(Guid id, string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth)
+        private User(Guid id, string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
         {
             Id = id;
             FirstName = firstName;
@@ -21,11 +28,12 @@ namespace iHRS.Domain.Models
             EmailAddress = emailAddress;
             Password = password;
             DateOfBirth = dateOfBirth;
+            Role = role;
         }
 
-        public static User CreateNew(string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth)
+        public static User CreateNew(string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
         {
-            return new User(Guid.NewGuid(), firstName, lastName, emailAddress, password, dateOfBirth);
+            return new User(Guid.NewGuid(), firstName, lastName, emailAddress, password, dateOfBirth, role);
         }
     }
 }

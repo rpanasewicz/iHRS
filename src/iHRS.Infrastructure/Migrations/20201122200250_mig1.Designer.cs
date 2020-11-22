@@ -10,8 +10,8 @@ using iHRS.Infrastructure;
 namespace iHRS.Infrastructure.Migrations
 {
     [DbContext(typeof(HRSContext))]
-    [Migration("20201122183721_Mig1")]
-    partial class Mig1
+    [Migration("20201122200250_mig1")]
+    partial class mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -332,6 +332,34 @@ namespace iHRS.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("iHRS.Domain.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnName("RoleId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "TenantOwner"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Receptionist"
+                        });
+                });
+
             modelBuilder.Entity("iHRS.Domain.Models.Room", b =>
                 {
                     b.Property<Guid>("Id")
@@ -452,6 +480,9 @@ namespace iHRS.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier");
 
@@ -474,6 +505,7 @@ namespace iHRS.Infrastructure.Migrations
                             ModifiedBy = "System",
                             ModifiedOn = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Password = "AQAAAAEAACcQAAAAENU6ixP+jXYINKxOpVeXbTl0X9q83k4cUIXSMPv0iQZro7F2xMN7t7otCg1O3IueJQ==",
+                            RoleId = 1,
                             TenantId = new Guid("00000000-0000-0000-0000-000000000001")
                         });
                 });

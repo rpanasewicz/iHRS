@@ -51,7 +51,7 @@ namespace iHRS.Application.Commands.Auth
                 throw new InvalidEmailException(cmd.Email);
             }
 
-            var user = await _userRepository.GetAsync(u => u.EmailAddress == cmd.Email);
+            var user = await _userRepository.FindFromAllAsync(u => u.EmailAddress == cmd.Email);
             if (user is null || !_passwordService.IsValid(user.Password, cmd.Password))
             {
                 _logger.LogError($"User with email: {cmd.Email} was not found.");
@@ -69,7 +69,7 @@ namespace iHRS.Application.Commands.Auth
                 ["tenantId"] = new string[] { user.TenantId.ToString() }
             };
 
-            var token = _jwtHandler.CreateToken(user.Id.ToString(), "user", claims: claims);
+            var token = _jwtHandler.CreateToken(user.Id.ToString(), user.Role.Name, claims: claims);
 
             _logger.LogInformation($"User with id: {user.Id} has been authenticated.");
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
@@ -44,5 +45,6 @@ namespace iHRS.Infrastructure.EntityConfigurations
 
         public override string TableName => "Customers";
         public override string PrimaryKeyColumnName => "CustomerId";
+        public override IEnumerable<Customer> SeedData => null;
     }
 }
