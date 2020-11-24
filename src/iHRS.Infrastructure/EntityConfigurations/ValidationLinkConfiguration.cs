@@ -8,7 +8,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class ValidationLinkConfiguration : BaseEntityConfiguration<ValidationLink>
     {
-        public ValidationLinkConfiguration(Guid tenantId) : base(tenantId)
+        public ValidationLinkConfiguration(HRSContext context) : base(context)
         {
         }
 

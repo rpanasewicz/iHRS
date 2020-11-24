@@ -10,7 +10,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : Entity
     {
-        private readonly Guid _tenantId;
+        private readonly HRSContext _context;
 
         public abstract void ConfigureFields(EntityTypeBuilder<T> entity);
         public abstract void ConfigureRelationships(EntityTypeBuilder<T> entity);
@@ -19,16 +19,16 @@ namespace iHRS.Infrastructure.EntityConfigurations
         public abstract string TableName { get; }
         public abstract string PrimaryKeyColumnName { get; }
 
-        public BaseEntityConfiguration(Guid tenantId)
+        public BaseEntityConfiguration(HRSContext context)
         {
-            _tenantId = tenantId;
+            _context = context;
         }
 
         public void Configure(EntityTypeBuilder<T> entity)
         {
             entity.ToTable(TableName);
 
-            entity.HasQueryFilter(e => e.TenantId == _tenantId && (e.ExpirationDate == null || e.ExpirationDate > DateTime.UtcNow));
+            entity.HasQueryFilter(e => e.TenantId == _context.TenantId && (e.ExpirationDate == null || e.ExpirationDate > DateTime.UtcNow));
 
             entity.Property(e => e.Id)
                 .HasColumnName(PrimaryKeyColumnName)

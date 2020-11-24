@@ -8,7 +8,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class CustomerConfiguration : BaseEntityConfiguration<Customer>
     {
-        public CustomerConfiguration(Guid tenantId) : base(tenantId)
+        public CustomerConfiguration(HRSContext context) : base(context)
         {
         }
 

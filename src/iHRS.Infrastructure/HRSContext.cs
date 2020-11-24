@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +15,8 @@ namespace iHRS.Infrastructure
 {
     internal class HRSContext : DbContext
     {
+        public Guid TenantId { get; }
+
         public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -35,12 +38,11 @@ namespace iHRS.Infrastructure
         public HRSContext(DbContextOptions<HRSContext> options, IAuthProvider authProvider) : base(options)
         {
             _authProvider = authProvider;
+            TenantId = _authProvider.TenantId;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var tenantId = _authProvider.TenantId;
-
             modelBuilder.ApplyConfiguration(new TenantTypeConfiguration());
 
             modelBuilder.ApplyConfiguration(new MessageTypeConfiguration());
@@ -48,13 +50,13 @@ namespace iHRS.Infrastructure
             modelBuilder.ApplyConfiguration(new ReservationStatusConfiguration());
             modelBuilder.ApplyConfiguration(new RoleTypeConfiguration());
 
-            modelBuilder.ApplyConfiguration(new CustomerConfiguration(tenantId));
-            modelBuilder.ApplyConfiguration(new HotelConfiguration(tenantId));
-            modelBuilder.ApplyConfiguration(new MessageTemplateConfiguration(tenantId));
-            modelBuilder.ApplyConfiguration(new ReservationConfiguration(tenantId));
-            modelBuilder.ApplyConfiguration(new RoomConfiguration(tenantId));
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration(tenantId));
-            modelBuilder.ApplyConfiguration(new ValidationLinkConfiguration(tenantId));            
+            modelBuilder.ApplyConfiguration(new CustomerConfiguration(this));
+            modelBuilder.ApplyConfiguration(new HotelConfiguration(this));
+            modelBuilder.ApplyConfiguration(new MessageTemplateConfiguration(this));
+            modelBuilder.ApplyConfiguration(new ReservationConfiguration(this));
+            modelBuilder.ApplyConfiguration(new RoomConfiguration(this));
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration(this));
+            modelBuilder.ApplyConfiguration(new ValidationLinkConfiguration(this));
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

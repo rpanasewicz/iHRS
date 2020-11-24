@@ -9,7 +9,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class EmployeeConfiguration : BaseEntityConfiguration<Employee>
     {
-        public EmployeeConfiguration(Guid tenantId) : base(tenantId)
+        public EmployeeConfiguration(HRSContext context) : base(context)
         {
         }
 

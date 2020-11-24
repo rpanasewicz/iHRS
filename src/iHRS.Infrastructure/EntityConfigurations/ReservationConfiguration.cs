@@ -8,7 +8,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class ReservationConfiguration : BaseEntityConfiguration<Reservation>
     {
-        public ReservationConfiguration(Guid tenantId) : base(tenantId)
+        public ReservationConfiguration(HRSContext context) : base(context)
         {
         }
 

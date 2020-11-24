@@ -8,7 +8,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal class MessageTemplateConfiguration : BaseEntityConfiguration<MessageTemplate>
     {
-        public MessageTemplateConfiguration(Guid tenantId) : base(tenantId)
+        public MessageTemplateConfiguration(HRSContext context) : base(context)
         {
         }
 
