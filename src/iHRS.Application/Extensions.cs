@@ -1,5 +1,8 @@
 ﻿using iHRS.Application.Common;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using AutoMapper;
+using iHRS.Application.Queries;
 
 namespace iHRS.Application
 {
@@ -12,6 +15,10 @@ namespace iHRS.Application
                     .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
                     .AsImplementedInterfaces()
                     .WithTransientLifetime());
+
+            services.AddScoped<EmployeeQueries>();
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
         }

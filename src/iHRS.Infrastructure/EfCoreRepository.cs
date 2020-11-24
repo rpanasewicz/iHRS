@@ -1,7 +1,10 @@
-﻿using iHRS.Domain.Common;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using iHRS.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -98,5 +101,10 @@ namespace iHRS.Infrastructure
 
         public async Task LoadProperty<TProperty>(T entity, Expression<Func<T, TProperty>> propertyExpression) where TProperty : class
             => await _context.Entry(entity).Reference(propertyExpression).LoadAsync();
+
+        public Task<List<TDestination>> ProjectToListAsync<TDestination>(IConfigurationProvider configuration)
+        {
+            return _context.Set<T>().ProjectTo<TDestination>(configuration).ToListAsync();
+        }
     }
 }
