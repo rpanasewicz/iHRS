@@ -60,6 +60,7 @@ namespace iHRS.Api
                 })
                 .Configure(app =>
                 {
+                    app.UseHttpsRedirection();
                     app.UseMiddleware<ErrorHandlerMiddleware>();
                     app.UseRouting();
                     app.UseAuthorization();
