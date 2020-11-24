@@ -3,7 +3,7 @@ using System;
 
 namespace iHRS.Domain.Models
 {
-    public class User : Entity
+    public class Employee : Entity
     {
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
@@ -18,9 +18,9 @@ namespace iHRS.Domain.Models
             private set => RoleId = value.Id;
         }
 
-        private User() { } // For EF
+        private Employee() { } // For EF
 
-        private User(Guid id, string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
+        private Employee(Guid id, string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
         {
             Id = id;
             FirstName = firstName;
@@ -31,9 +31,9 @@ namespace iHRS.Domain.Models
             Role = role;
         }
 
-        public static User CreateNew(string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
+        public static Employee CreateNew(string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
         {
-            return new User(Guid.NewGuid(), firstName, lastName, emailAddress, password, dateOfBirth, role);
+            return new Employee(Guid.NewGuid(), firstName, lastName, emailAddress, password, dateOfBirth, role);
         }
     }
 }

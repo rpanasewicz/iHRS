@@ -16,7 +16,7 @@ namespace iHRS.Infrastructure
     {
         public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Room> Rooms { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<ReservationStatus> ReservationStatuses { get; set; }
@@ -53,7 +53,7 @@ namespace iHRS.Infrastructure
             modelBuilder.ApplyConfiguration(new MessageTemplateConfiguration(tenantId));
             modelBuilder.ApplyConfiguration(new ReservationConfiguration(tenantId));
             modelBuilder.ApplyConfiguration(new RoomConfiguration(tenantId));
-            modelBuilder.ApplyConfiguration(new UserConfiguration(tenantId));
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration(tenantId));
             modelBuilder.ApplyConfiguration(new ValidationLinkConfiguration(tenantId));            
         }
 

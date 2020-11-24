@@ -24,7 +24,7 @@ namespace iHRS.Application.Commands.Auth
 
     public class SignInCommandHandler : ICommandHandler<SignInCommand, JsonWebToken>
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Employee> _employeeRepository;
         private readonly IPasswordService _passwordService;
         private readonly IJwtHandler _jwtHandler;
         private readonly ILogger<SignInCommandHandler> _logger;
@@ -34,10 +34,10 @@ namespace iHRS.Application.Commands.Auth
             @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        public SignInCommandHandler(IRepository<User> userRepository, IPasswordService passwordService,
+        public SignInCommandHandler(IRepository<Employee> employeeRepository, IPasswordService passwordService,
             IJwtHandler jwtHandler, ILogger<SignInCommandHandler> logger)
         {
-            _userRepository = userRepository;
+            _employeeRepository = employeeRepository;
             _passwordService = passwordService;
             _jwtHandler = jwtHandler;
             _logger = logger;
@@ -51,7 +51,7 @@ namespace iHRS.Application.Commands.Auth
                 throw new InvalidEmailException(cmd.Email);
             }
 
-            var user = await _userRepository.FindFromAllAsync(u => u.EmailAddress == cmd.Email);
+            var user = await _employeeRepository.FindFromAllAsync(u => u.EmailAddress == cmd.Email);
             if (user is null || !_passwordService.IsValid(user.Password, cmd.Password))
             {
                 _logger.LogError($"User with email: {cmd.Email} was not found.");

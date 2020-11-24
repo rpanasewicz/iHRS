@@ -7,13 +7,13 @@ using System.Reflection;
 
 namespace iHRS.Infrastructure.EntityConfigurations
 {
-    internal class UserConfiguration : BaseEntityConfiguration<User>
+    internal class EmployeeConfiguration : BaseEntityConfiguration<Employee>
     {
-        public UserConfiguration(Guid tenantId) : base(tenantId)
+        public EmployeeConfiguration(Guid tenantId) : base(tenantId)
         {
         }
 
-        public override void ConfigureFields(EntityTypeBuilder<User> entity)
+        public override void ConfigureFields(EntityTypeBuilder<Employee> entity)
         {
             entity.Ignore(e => e.Role);
 
@@ -44,18 +44,18 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 .IsRequired();
         }
 
-        public override void ConfigureRelationships(EntityTypeBuilder<User> entity)
+        public override void ConfigureRelationships(EntityTypeBuilder<Employee> entity)
         {
         }
 
-        public override string TableName => "Users";
-        public override string PrimaryKeyColumnName => "UserId";
+        public override string TableName => "Employees";
+        public override string PrimaryKeyColumnName => "EmployeeId";
 
-        public override IEnumerable<User> SeedData
+        public override IEnumerable<Employee> SeedData
         {
             get
             {
-                var user = User.CreateNew("Adam", "Nowak", "user@example.com",
+                var user = Employee.CreateNew("Adam", "Nowak", "user@example.com",
                                           "AQAAAAEAACcQAAAAENU6ixP+jXYINKxOpVeXbTl0X9q83k4cUIXSMPv0iQZro7F2xMN7t7otCg1O3IueJQ==",
                                           new DateTime(1995, 4, 11), Role.TenantOwner);
 
@@ -65,11 +65,11 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 user.ModifiedOn = new DateTime(2020, 1, 1);
                 user.TenantId = new Guid("00000000-0000-0000-0000-000000000001");
 
-                typeof(User)
+                typeof(Employee)
                     .GetProperty("Id")
                     .ForceSetValue(user, new Guid("00000000-0000-0000-0000-000000000002"));
 
-                return new User[] { user };
+                return new Employee[] { user };
             }
         }
     }
