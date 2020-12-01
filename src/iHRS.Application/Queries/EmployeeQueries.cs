@@ -3,10 +3,11 @@ using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using System.Collections.Generic;
 using AutoMapper;
+using iHRS.Application.Queries.Common;
 
 namespace iHRS.Application.Queries
 {
-    public class EmployeeQueries
+    public class EmployeeQueries : IQuery
     {
         private IRepository<Employee> _employeeRepository;
         private IMapper _mapper;
