@@ -59,14 +59,6 @@ namespace iHRS.Infrastructure
                 .Scan(scan =>
                     scan
                         .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-                        .AddClasses(c => c.AssignableTo(typeof(IQuery)))
-                        .AsImplementedInterfaces()
-                        .WithScopedLifetime());
-
-            services
-                .Scan(scan =>
-                    scan
-                        .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                         .AddClasses(c => c.AssignableTo(typeof(IService)))
                         .AsImplementedInterfaces()
                         .WithScopedLifetime());
