@@ -32,19 +32,5 @@ namespace iHRS.Api.Controllers
             await _commandDispatcher.SendAsync(cmd);
             return Ok();
         }
-
-        [HttpPost("resetPassword")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordCommand cmd)
-        {
-            await _commandDispatcher.SendAsync(cmd);
-            return Ok();
-        }
-
-        [HttpPost("changePassword")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordCommand cmd)
-        {
-            await _commandDispatcher.SendAsync(cmd);
-            return Ok();
-        }
     }
 }

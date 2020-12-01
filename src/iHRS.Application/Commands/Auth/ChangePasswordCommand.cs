@@ -5,19 +5,17 @@ using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using System.Threading.Tasks;
 
-namespace iHRS.Application.Commands.Employees
+namespace iHRS.Application.Commands.Auth
 {
     public class ChangePasswordCommand : ICommand
     {
-        public string EmailAddress { get; }
         public string OldPassword { get; }
         public string NewPassword { get; }
 
-        public ChangePasswordCommand(string emailAddress, string oldPassword, string newPassword)
+        public ChangePasswordCommand(string oldPassword, string newPassword)
         {
             OldPassword = oldPassword;
             NewPassword = newPassword;
-            EmailAddress = emailAddress.Trim().ToLower();
         }
     }
 
@@ -25,6 +23,7 @@ namespace iHRS.Application.Commands.Employees
     {
         private IRepository<Employee> _repository;
         private readonly IPasswordService _passwordService;
+        private readonly IAuthProvider _authProvider;
 
         public ChangePasswordCommandHandler(IRepository<Employee> repository, IPasswordService passwordService)
         {
@@ -34,21 +33,13 @@ namespace iHRS.Application.Commands.Employees
 
         public async Task<Unit> Handle(ChangePasswordCommand cmd)
         {
-            var user = await _repository.GetAsync(u => u.EmailAddress == cmd.EmailAddress);
+            var user = await _repository.GetAsync(_authProvider.UserId);
 
             if (user == null)
-                throw new NotFoundException(nameof(Employee), cmd.EmailAddress);
+                throw new NotFoundException(nameof(Employee), _authProvider.UserId);
 
-            if(user.PasswordChanged)
-            {
-                if (_passwordService.IsValid(user.Password, cmd.OldPassword))
-                    throw new InvalidCredentialsException();
-            }
-            else
-            {
-                if (string.Equals(user.Password, cmd.OldPassword))
-                    throw new InvalidCredentialsException();
-            }
+            if (_passwordService.IsValid(user.Password, cmd.OldPassword))
+                throw new InvalidCredentialsException();
 
             var passwordHash = _passwordService.Hash(cmd.NewPassword);
 

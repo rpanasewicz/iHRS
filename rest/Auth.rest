@@ -1,4 +1,5 @@
 @url = http://localhost:5000/auth
+@accessToken = secret
 
 ###
 POST {{url}}/sign-in
@@ -7,4 +8,34 @@ Content-Type: application/json
 {
   "emailAddress": "user@example.com",
   "password": "secret"
+}
+
+###
+POST {{url}}/resetPassword
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "emailAddress": ""
+}
+
+###
+POST {{url}}/setupPassword
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "emailAddress": "",
+    "oldPassword": "",
+    "newPassword": ""
+}
+
+###
+POST {{url}}/changePassword
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "oldPassword": "",
+    "newPassword": ""
 }

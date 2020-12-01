@@ -18,17 +18,31 @@ namespace iHRS.Api.Controllers
         }
 
         [HttpPost("sign-in")]
-        public async Task<IActionResult> SignIn(SigInModel md)
+        public async Task<IActionResult> SignIn(SignInCommand cmd)
         {
-            var cmd = new SignInCommand(md.EmailAddress, md.Password);
             var result = await _commandDispatcher.SendAsync(cmd);
             return Ok(result);
         }
 
-        public class SigInModel
+        [HttpPost("resetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordCommand cmd)
         {
-            public string EmailAddress { get; set; }
-            public string Password { get; set; }
+            await _commandDispatcher.SendAsync(cmd);
+            return Ok();
+        }
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommand cmd)
+        {
+            await _commandDispatcher.SendAsync(cmd);
+            return Ok();
+        }
+
+        [HttpPost("setupPassword")]
+        public async Task<IActionResult> SetupPassword(SetupPasswordCommand cmd)
+        {
+            await _commandDispatcher.SendAsync(cmd);
+            return Ok();
         }
     }
 }

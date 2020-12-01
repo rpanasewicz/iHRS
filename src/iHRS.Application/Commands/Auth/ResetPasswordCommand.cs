@@ -6,7 +6,7 @@ using iHRS.Domain.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace iHRS.Application.Commands.Employees
+namespace iHRS.Application.Commands.Auth
 {
     public class ResetPasswordCommand : ICommand
     {

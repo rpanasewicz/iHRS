@@ -11,22 +11,3 @@ POST {{url}}
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-###
-POST {{url}}/resetPassword
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-{
-    "emailAddress": ""
-}
-
-###
-POST {{url}}/changePassword
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-{
-    "emailAddress": "",
-    "oldPassword": "",
-    "newPassword": ""
-}
