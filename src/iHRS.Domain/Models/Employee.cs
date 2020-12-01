@@ -1,4 +1,5 @@
 ﻿using iHRS.Domain.Common;
+using iHRS.Domain.DomainEvents;
 using System;
 
 namespace iHRS.Domain.Models
@@ -10,6 +11,7 @@ namespace iHRS.Domain.Models
         public string EmailAddress { get; private set; }
         public string Password { get; private set; }
         public DateTime DateOfBirth { get; private set; }
+        public bool PasswordChanged { get; private set; }
 
         public int RoleId { get; private set; }
         public Role Role
@@ -20,7 +22,7 @@ namespace iHRS.Domain.Models
 
         private Employee() { } // For EF
 
-        private Employee(Guid id, string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
+        private Employee(Guid id, string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role, bool passwordChanged)
         {
             Id = id;
             FirstName = firstName;
@@ -29,11 +31,26 @@ namespace iHRS.Domain.Models
             Password = password;
             DateOfBirth = dateOfBirth;
             Role = role;
+            PasswordChanged = passwordChanged;
         }
 
         public static Employee CreateNew(string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
         {
-            return new Employee(Guid.NewGuid(), firstName, lastName, emailAddress, password, dateOfBirth, role);
+            return new Employee(Guid.NewGuid(), firstName, lastName, emailAddress, password, dateOfBirth, role, false);
+        }
+
+        public void ResetPassword(string password)
+        {
+            PasswordChanged = false;
+            Password = password;
+
+            this.AddEvent(new EmployeePasswordReseted(this));
+        }
+
+        public void ChangePassword(string password)
+        {
+            PasswordChanged = true;
+            Password = password;
         }
     }
 }

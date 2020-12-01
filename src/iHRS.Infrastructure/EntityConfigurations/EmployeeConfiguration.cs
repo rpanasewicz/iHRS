@@ -69,7 +69,21 @@ namespace iHRS.Infrastructure.EntityConfigurations
                     .GetProperty("Id")
                     .ForceSetValue(user, new Guid("00000000-0000-0000-0000-000000000002"));
 
-                return new Employee[] { user };
+                var user2 = Employee.CreateNew("Ewa", "Kowalska", "user2@example.com",
+                          "AQAAAAEAACcQAAAAENU6ixP+jXYINKxOpVeXbTl0X9q83k4cUIXSMPv0iQZro7F2xMN7t7otCg1O3IueJQ==",
+                          new DateTime(1995, 4, 11), Role.Receptionist);
+
+                user2.CreatedBy = "System";
+                user2.ModifiedBy = "System";
+                user2.CreatedOn = new DateTime(2020, 1, 1);
+                user2.ModifiedOn = new DateTime(2020, 1, 1);
+                user2.TenantId = new Guid("00000000-0000-0000-0000-000000000001");
+
+                typeof(Employee)
+                    .GetProperty("Id")
+                    .ForceSetValue(user2, new Guid("00000000-0000-0000-0000-000000000003"));
+
+                return new Employee[] { user, user2 };
             }
         }
     }

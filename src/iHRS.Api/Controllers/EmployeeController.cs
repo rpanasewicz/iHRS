@@ -1,6 +1,9 @@
 ﻿using iHRS.Api.Configuration;
+using iHRS.Application.Commands.Employees;
+using iHRS.Application.Common;
 using iHRS.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace iHRS.Api.Controllers
 {
@@ -10,6 +13,7 @@ namespace iHRS.Api.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly EmployeeQueries _queries;
+        private readonly ICommandDispatcher _commandDispatcher;
 
         public EmployeeController(EmployeeQueries queries)
         {
@@ -20,6 +24,27 @@ namespace iHRS.Api.Controllers
         public IActionResult Get()
         {
             return Ok(_queries.GetAll());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAsync(CreateEmployeeCommand cmd)
+        {
+            await _commandDispatcher.SendAsync(cmd);
+            return Ok();
+        }
+
+        [HttpPost("resetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordCommand cmd)
+        {
+            await _commandDispatcher.SendAsync(cmd);
+            return Ok();
+        }
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommand cmd)
+        {
+            await _commandDispatcher.SendAsync(cmd);
+            return Ok();
         }
     }
 }
