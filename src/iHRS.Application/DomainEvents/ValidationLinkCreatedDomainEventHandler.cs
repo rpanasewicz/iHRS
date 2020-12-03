@@ -46,7 +46,7 @@ namespace iHRS.Application.DomainEvents
 
             var message = Smart.Format(template.Message, formatArgs);
 
-            await _messageService.SendMessage(message, new[] { domainEvent.Customer.EmailAddress }, "email");
+            await _messageService.SendMessage("email", message, domainEvent.Customer.EmailAddress);
         }
     }
 }

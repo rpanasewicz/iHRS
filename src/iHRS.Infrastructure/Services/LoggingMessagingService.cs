@@ -13,13 +13,13 @@ namespace iHRS.Infrastructure.Services
             _logger = logger;
         }
 
-        public Task SendMessage(string message, string[] recipients, string connectionType)
+        public Task SendMessage(string connectionType, string message, params string[] recipients)
         {
             _logger.LogInformation(
                 "IMessageService.{method} called. (message: '{message}', recipients: {@recipients}, connectionType: '{connectionType}'",
                 nameof(SendMessage), message, recipients, connectionType);
 
-            return Task.CompletedTask; ;
+            return Task.CompletedTask;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace iHRS.Application.DomainEvents
 
             var message = SmartFormat.Smart.Format(template.Message, domainEvent.Reservation, domainEvent.Room.Hotel);
 
-            await _messageService.SendMessage(message, new[] { domainEvent.Reservation.Customer.EmailAddress }, "email");
+            await _messageService.SendMessage("email", message, domainEvent.Reservation.Customer.EmailAddress);
         }
     }
 }
