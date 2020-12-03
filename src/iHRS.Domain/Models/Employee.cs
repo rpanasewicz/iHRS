@@ -36,7 +36,9 @@ namespace iHRS.Domain.Models
 
         public static Employee CreateNew(string firstName, string lastName, string emailAddress, string password, DateTime dateOfBirth, Role role)
         {
-            return new Employee(Guid.NewGuid(), firstName, lastName, emailAddress, password, dateOfBirth, role, false);
+            var emp = new Employee(Guid.NewGuid(), firstName, lastName, emailAddress, password, dateOfBirth, role, false);
+            emp.AddEvent(new EmployeeCreated(emp));
+            return emp;
         }
 
         public void ResetPassword(string password)
