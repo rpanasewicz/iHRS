@@ -23,9 +23,10 @@ namespace iHRS.Application.Commands.Auth
         private IRepository<Employee> _repository;
         private readonly IPasswordService _passwordService;
 
-        public ResetPasswordCommandHandler(IRepository<Employee> repository)
+        public ResetPasswordCommandHandler(IRepository<Employee> repository, IPasswordService passwordService)
         {
             _repository = repository;
+            _passwordService = passwordService;
         }
 
         public async Task<Unit> Handle(ResetPasswordCommand cmd)

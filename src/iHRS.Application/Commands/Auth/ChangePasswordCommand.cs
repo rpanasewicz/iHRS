@@ -25,10 +25,11 @@ namespace iHRS.Application.Commands.Auth
         private readonly IPasswordService _passwordService;
         private readonly IAuthProvider _authProvider;
 
-        public ChangePasswordCommandHandler(IRepository<Employee> repository, IPasswordService passwordService)
+        public ChangePasswordCommandHandler(IRepository<Employee> repository, IPasswordService passwordService, IAuthProvider authProvider)
         {
             _repository = repository;
             _passwordService = passwordService;
+            _authProvider = authProvider;
         }
 
         public async Task<Unit> Handle(ChangePasswordCommand cmd)

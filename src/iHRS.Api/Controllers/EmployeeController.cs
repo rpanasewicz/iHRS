@@ -15,9 +15,10 @@ namespace iHRS.Api.Controllers
         private readonly EmployeeQueries _queries;
         private readonly ICommandDispatcher _commandDispatcher;
 
-        public EmployeeController(EmployeeQueries queries)
+        public EmployeeController(EmployeeQueries queries, ICommandDispatcher commandDispatcher)
         {
             _queries = queries;
+            _commandDispatcher = commandDispatcher;
         }
 
         [HttpGet]
