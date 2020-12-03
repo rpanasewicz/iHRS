@@ -1,8 +1,8 @@
-﻿using iHRS.Application.Common;
+﻿using AutoMapper;
+using iHRS.Application.Common;
+using iHRS.Application.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using AutoMapper;
-using iHRS.Application.Queries;
 
 namespace iHRS.Application
 {

@@ -1,7 +1,6 @@
 ﻿using iHRS.Application.Commands.Auth;
 using iHRS.Application.Common;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace iHRS.Api.Controllers

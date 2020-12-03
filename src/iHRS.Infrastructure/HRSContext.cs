@@ -2,12 +2,10 @@
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using iHRS.Infrastructure.EntityConfigurations;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 

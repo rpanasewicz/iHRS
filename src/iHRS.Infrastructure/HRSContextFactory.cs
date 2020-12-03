@@ -1,5 +1,4 @@
 ﻿using iHRS.Application.Auth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;

@@ -1,7 +1,6 @@
 ﻿using iHRS.Application.Auth;
 using iHRS.Application.Common;
 using iHRS.Application.DomainEvents;
-using iHRS.Application.Queries;
 using iHRS.Application.Services;
 using iHRS.Domain.Common;
 using iHRS.Domain.DomainEvents.Abstractions;
@@ -18,7 +17,6 @@ using Polly;
 using Scrutor;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -93,7 +91,7 @@ namespace iHRS.Infrastructure
             return MigrateDbContext<HRSContext>(webHost, (context, provider) =>
             {
             });
-        }    
+        }
 
         internal static IWebHost MigrateDbContext<TContext>(this IWebHost webHost, Action<TContext, IServiceProvider> seeder) where TContext : DbContext
         {

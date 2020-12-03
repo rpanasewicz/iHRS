@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -68,7 +67,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 .WithMany()
                 .HasForeignKey(e => e.TenantId);
 
-            if(SeedData?.Any() == true) entity.HasData(SeedData);
+            if (SeedData?.Any() == true) entity.HasData(SeedData);
 
             ConfigureFields(entity);
             ConfigureRelationships(entity);

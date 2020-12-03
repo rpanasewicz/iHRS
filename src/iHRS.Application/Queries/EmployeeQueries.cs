@@ -1,9 +1,9 @@
-﻿using iHRS.Application.Queries.Dtos;
+﻿using AutoMapper;
+using iHRS.Application.Queries.Common;
+using iHRS.Application.Queries.Dtos;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using System.Collections.Generic;
-using AutoMapper;
-using iHRS.Application.Queries.Common;
 
 namespace iHRS.Application.Queries
 {

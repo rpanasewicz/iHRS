@@ -21,6 +21,6 @@ namespace iHRS.Infrastructure.Auth
                 ? Guid.TryParse(_httpContext.User?.Identity?.Name, out var userId) ? userId : Guid.Empty
                 : Guid.Empty;
 
-        public Guid TenantId => Guid.TryParse(_httpContext?.User?.Claims.SingleOrDefault(c => c.Type.ToLower() == "tenantid")?.Value, out var tenantId) ? tenantId : Guid.Empty; 
+        public Guid TenantId => Guid.TryParse(_httpContext?.User?.Claims.SingleOrDefault(c => c.Type.ToLower() == "tenantid")?.Value, out var tenantId) ? tenantId : Guid.Empty;
     }
 }

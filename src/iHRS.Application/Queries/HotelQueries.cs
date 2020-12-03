@@ -2,11 +2,7 @@
 using iHRS.Application.Queries.Common;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace iHRS.Application.Queries
 {
