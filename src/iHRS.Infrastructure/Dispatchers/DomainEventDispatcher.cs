@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace iHRS.Infrastructure.Dispatchers
 {
-    internal sealed class DomainEventDispatcher : IDomainEventPublisher
+    internal sealed class DomainEventDispatcher : IDomainEventDispatcher
     {
         private readonly IServiceProvider _serviceProvider;
 

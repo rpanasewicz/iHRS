@@ -65,7 +65,7 @@ namespace iHRS.Infrastructure
 
 
             services.AddScoped<ICommandDispatcher, CommandDispatcher>();
-            services.AddScoped<IDomainEventPublisher, DomainEventDispatcher>();
+            services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
             services.AddJwt();
             services.AddScoped<IAuthProvider, AuthProvider>();

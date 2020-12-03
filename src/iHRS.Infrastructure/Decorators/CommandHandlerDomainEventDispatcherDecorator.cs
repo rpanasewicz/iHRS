@@ -12,12 +12,12 @@ namespace iHRS.Infrastructure.Decorators
         private readonly ICommandHandler<TCommand, TResult> _handler;
         private readonly ILogger<TCommand> _logger;
         private readonly HRSContext _context;
-        private readonly IDomainEventPublisher _domainEventPublisher;
+        private readonly IDomainEventDispatcher _domainEventPublisher;
 
         public CommandHandlerDomainEventDispatcherDecorator(ICommandHandler<TCommand, TResult> handler,
             ILogger<TCommand> logger,
             HRSContext context,
-            IDomainEventPublisher domainEventPublisher)
+            IDomainEventDispatcher domainEventPublisher)
         {
             _handler = handler;
             _logger = logger;
