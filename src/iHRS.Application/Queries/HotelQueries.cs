@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using iHRS.Application.Queries.Common;
+using iHRS.Application.Queries.Dtos;
 using iHRS.Domain.Common;
 using iHRS.Domain.Models;
 using System.Collections.Generic;
@@ -19,10 +20,5 @@ namespace iHRS.Application.Queries
 
         public IEnumerable<HotelDto> GetAll() => _hotelRepository.ProjectToListAsync<HotelDto>(_mapper.ConfigurationProvider).GetAwaiter().GetResult();
 
-    }
-
-    public class HotelDto : IMapFrom<Hotel>
-    {
-        public string Name { get; private set; }
     }
 }

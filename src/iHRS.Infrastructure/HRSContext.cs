@@ -66,7 +66,7 @@ namespace iHRS.Infrastructure
         private void UpdateAuditables()
         {
             var auditables = ChangeTracker.Entries<Entity>();
-            var userId = _authProvider.UserId != default ? _authProvider.UserId.ToString() : "SYSTEM";
+            var userId = _authProvider.UserId != default ? _authProvider.UserId.ToString("N") : "SYSTEM";
             var tenantId = _authProvider.TenantId;
 
             var now = DateTime.UtcNow;

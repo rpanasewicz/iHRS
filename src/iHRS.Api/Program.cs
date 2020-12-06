@@ -20,11 +20,10 @@ namespace iHRS.Api
             await WebHost
                 .CreateDefaultBuilder(args)
                 .UseSerilog((context, loggerConfiguration) =>
-                {
-                    loggerConfiguration.WriteTo.Console();
+                {      
+                    loggerConfiguration.ReadFrom.Configuration(context.Configuration);
 
                     loggerConfiguration.Enrich.FromLogContext()
-                        .MinimumLevel.Is(LogEventLevel.Information)
                         .Enrich.WithProperty("Environment", "Development")
                         .Enrich.WithProperty("Application", "iHRS")
                         .Enrich.WithProperty("Version", "0.0");
@@ -53,10 +52,7 @@ namespace iHRS.Api
                     });
 
                     services.AddMvc();
-
-
                     services.AddTransient<ErrorHandlerMiddleware>();
-
                 })
                 .Configure(app =>
                 {

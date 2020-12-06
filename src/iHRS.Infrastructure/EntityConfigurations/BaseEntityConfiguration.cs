@@ -9,7 +9,7 @@ namespace iHRS.Infrastructure.EntityConfigurations
 {
     internal abstract class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : Entity
     {
-        private readonly HRSContext _context;
+        protected readonly HRSContext _context;
 
         public abstract void ConfigureFields(EntityTypeBuilder<T> entity);
         public abstract void ConfigureRelationships(EntityTypeBuilder<T> entity);
@@ -67,7 +67,21 @@ namespace iHRS.Infrastructure.EntityConfigurations
                 .WithMany()
                 .HasForeignKey(e => e.TenantId);
 
-            if (SeedData?.Any() == true) entity.HasData(SeedData);
+            if (SeedData?.Any() == true)
+            {
+                var seedlist = SeedData.ToList();
+
+                foreach (var seedEntity in seedlist)
+                {
+                    seedEntity.CreatedBy = "System";
+                    seedEntity.ModifiedBy = "System";
+                    seedEntity.CreatedOn = new DateTime(2020, 1, 1);
+                    seedEntity.ModifiedOn = new DateTime(2020, 1, 1);
+                    seedEntity.TenantId = new Guid("00000000-0000-0000-0000-000000000001");
+                }
+
+                entity.HasData(seedlist);
+            }
 
             ConfigureFields(entity);
             ConfigureRelationships(entity);

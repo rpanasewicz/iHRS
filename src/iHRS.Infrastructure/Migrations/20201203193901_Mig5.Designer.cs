@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iHRS.Infrastructure;
 
 namespace iHRS.Infrastructure.Migrations
 {
     [DbContext(typeof(HRSContext))]
-    partial class HRSContextModelSnapshot : ModelSnapshot
+    [Migration("20201203193901_Mig5")]
+    partial class Mig5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,16 +270,6 @@ namespace iHRS.Infrastructure.Migrations
                             ModifiedBy = "System",
                             ModifiedOn = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "My first hotel",
-                            TenantId = new Guid("00000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000005"),
-                            CreatedBy = "System",
-                            CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = "System",
-                            ModifiedOn = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "My second hotel",
                             TenantId = new Guid("00000000-0000-0000-0000-000000000001")
                         });
                 });

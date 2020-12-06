@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using iHRS.Application.Common;
 using iHRS.Application.Queries;
+using iHRS.Application.Queries.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -15,6 +16,12 @@ namespace iHRS.Application
                     .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
                     .AsImplementedInterfaces()
                     .WithTransientLifetime());
+
+            services.Scan(s =>
+                s.FromAssemblies(typeof(IQuery).Assembly)
+                    .AddClasses(c => c.AssignableTo(typeof(IQuery)))
+                    .AsSelf()
+                    .WithScopedLifetime());
 
             services.AddScoped<EmployeeQueries>();
 

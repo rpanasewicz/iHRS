@@ -76,6 +76,7 @@ namespace iHRS.Infrastructure
                         sqlOptions.MigrationsAssembly(typeof(Extensions).GetTypeInfo().Assembly.GetName().Name);
                         sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
                     });
+                options.EnableSensitiveDataLogging();
             });
 
             services.AddCommandDecorator(typeof(ICommandHandler<,>), typeof(CommandHandlerDomainEventDispatcherDecorator<,>));
@@ -116,6 +117,7 @@ namespace iHRS.Infrastructure
 
                 retry.Execute(() =>
                 {
+                    context?.Database.EnsureDeleted();
                     context?.Database.Migrate();
                     seeder?.Invoke(context, services);
                 });
@@ -188,7 +190,7 @@ namespace iHRS.Infrastructure
             return query;
         }
 
-        public static void ForceSetValue(this PropertyInfo propertyInfo, object obj, object value)
+        public static PropertyInfo ForceSetValue(this PropertyInfo propertyInfo, object obj, object value)
         {
             var backingFieldInfo = obj.GetType().GetField($"<{propertyInfo.Name}>k__BackingField",
                 BindingFlags.Instance | BindingFlags.NonPublic);
@@ -203,6 +205,8 @@ namespace iHRS.Infrastructure
                 BindingFlags.Instance | BindingFlags.NonPublic);
                 backingFieldInfo.SetValue(obj, value);
             }
+
+            return propertyInfo;
         }
     }
 

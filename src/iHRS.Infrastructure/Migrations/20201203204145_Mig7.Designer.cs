@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iHRS.Infrastructure;
 
 namespace iHRS.Infrastructure.Migrations
 {
     [DbContext(typeof(HRSContext))]
-    partial class HRSContextModelSnapshot : ModelSnapshot
+    [Migration("20201203204145_Mig7")]
+    partial class Mig7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
